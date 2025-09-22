@@ -373,7 +373,7 @@ const EbookAccess = ({ userName, userEmail, autoScrollToPdf = false }: EbookAcce
                 {/* PDF Embed */}
                 <div className="w-full h-96 md:h-[600px] border border-gray-300 rounded-lg overflow-hidden">
                   <iframe
-                    src="https://memecodefrontend112.vercel.app/ebook/memecodepdf.pdf#toolbar=1&navpanes=1&scrollbar=1"
+                    src={`https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent('https://memecodefrontend112.vercel.app/ebook/memecodepdf.pdf')}`}
                     className="w-full h-full"
                     title="MemeCode Ebook PDF Viewer"
                   >
