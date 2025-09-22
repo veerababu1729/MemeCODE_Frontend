@@ -6,6 +6,7 @@ import PurchaseCounter from './PurchaseCounter';
 import { useState } from 'react';
 import PaymentFlow from './PaymentFlow';
 import AuthenticationFlow from './AuthenticationFlow';
+import coverImage from '@/assets/coverpage.png';
 
 const PaymentSection = () => {
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
@@ -91,7 +92,7 @@ const PaymentSection = () => {
             <div className="flex justify-center lg:justify-start lg:pl-4">
               <div className="relative">
                 <img 
-                  src="/src/assets/coverpage.png" 
+                  src={coverImage} 
                   alt="Python in 21 Days Ebook Cover" 
                   className="w-48 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                 />
