@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Code2, Cpu, Database, Terminal, Braces, CircuitBoard } from 'lucide-react';
 import logo from '@/assets/logo.png';
+import coverpage from '@assets/coverpage.png';
 
 interface EntryPageProps {
   onGetStarted: () => void;

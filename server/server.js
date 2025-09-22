@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const { Pool } = require('pg');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -15,12 +15,17 @@ const PORT = process.env.PORT || 5000;
 // CORS Configuration for production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL]
+    ? [
+        process.env.FRONTEND_URL,
+        'https://memecodefrontend112.vercel.app',
+        'https://skyblue-python-launch.vercel.app'
+      ]
     : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:8080'],
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
 };
 
 // Security and Performance Middleware
@@ -31,7 +36,8 @@ if (process.env.NODE_ENV === 'production') {
   // Security headers
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
+    // Allow same-origin framing for ebook display
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     next();
@@ -52,6 +58,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Initialize Razorpay
+console.log('🔧 Initializing Razorpay...');
+console.log('📋 Razorpay Key ID:', process.env.RAZORPAY_KEY_ID ? '✅ Present' : '❌ Missing');
+console.log('📋 Razorpay Secret:', process.env.RAZORPAY_KEY_SECRET ? '✅ Present' : '❌ Missing');
+
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  console.error('❌ Missing Razorpay credentials! Payment functionality will not work.');
+  console.error('Required: RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables');
+}
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -362,38 +377,57 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running!', timestamp: new Date().toISOString() });
 });
 
-
-
-
 // Create Razorpay order
 app.post('/api/create-order', async (req, res) => {
   const client = await pool.connect();
   try {
-    const { amount } = req.body; // Amount in paise (₹99 = 9900 paise)
+    console.log('💳 Create order request received:', req.body);
     
+    const { amount, currency = 'INR' } = req.body;
+    
+    if (!amount) {
+      console.log('❌ Amount missing in request');
+      return res.status(400).json({ error: 'Amount is required' });
+    }
+
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      console.error('❌ Razorpay credentials not configured');
+      return res.status(500).json({ error: 'Payment service not configured' });
+    }
+
     const options = {
-      amount: amount || 9900, // Default ₹99
-      currency: 'INR',
+      amount: amount, // amount in paise
+      currency: currency,
       receipt: `receipt_${Date.now()}`,
     };
 
+    console.log('🔄 Creating Razorpay order with options:', options);
     const order = await razorpay.orders.create(options);
+    console.log('✅ Razorpay order created successfully:', order.id);
     
     // Store order in database
     await client.query(
-      'INSERT INTO payments (razorpay_order_id, amount, currency) VALUES ($1, $2, $3)',
-      [order.id, order.amount, order.currency]
+      'INSERT INTO payments (razorpay_order_id, amount, currency, status, created_at) VALUES ($1, $2, $3, $4, $5)',
+      [order.id, order.amount, order.currency, 'created', new Date()]
     );
+    console.log('💾 Order stored in database:', order.id);
     
-    res.json({
+    const response = {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
       key: process.env.RAZORPAY_KEY_ID
-    });
+    };
+    
+    console.log('📤 Sending response:', response);
+    res.json(response);
   } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({ error: 'Failed to create order' });
+    console.error('❌ Error creating Razorpay order:', error);
+    console.error('Error details:', error.message);
+    res.status(500).json({ 
+      error: 'Failed to create payment order',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   } finally {
     client.release();
   }
@@ -403,6 +437,7 @@ app.post('/api/create-order', async (req, res) => {
 app.post('/api/verify-payment', async (req, res) => {
   const client = await pool.connect();
   try {
+    console.log('🔍 Payment verification request received:', req.body);
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     // Create signature for verification
@@ -413,24 +448,32 @@ app.post('/api/verify-payment', async (req, res) => {
       .digest('hex');
 
     const isAuthentic = expectedSignature === razorpay_signature;
+    console.log('🔐 Signature verification:', isAuthentic ? '✅ Valid' : '❌ Invalid');
 
     if (isAuthentic) {
       // Update payment status in database
-      await client.query(
-        'UPDATE payments SET razorpay_payment_id = $1, razorpay_signature = $2, status = $3, updated_at = CURRENT_TIMESTAMP WHERE razorpay_order_id = $4',
+      const updateResult = await client.query(
+        'UPDATE payments SET razorpay_payment_id = $1, razorpay_signature = $2, status = $3, updated_at = CURRENT_TIMESTAMP WHERE razorpay_order_id = $4 RETURNING id',
         [razorpay_payment_id, razorpay_signature, 'completed', razorpay_order_id]
       );
       
-      res.json({ 
-        success: true, 
-        message: 'Payment verified successfully',
-        orderId: razorpay_order_id 
-      });
+      if (updateResult.rows.length > 0) {
+        console.log('✅ Payment verified and updated in database:', razorpay_order_id);
+        res.json({ 
+          success: true, 
+          message: 'Payment verified successfully',
+          orderId: razorpay_order_id 
+        });
+      } else {
+        console.log('❌ Payment order not found in database:', razorpay_order_id);
+        res.status(404).json({ success: false, message: 'Payment order not found' });
+      }
     } else {
+      console.log('❌ Invalid payment signature for order:', razorpay_order_id);
       res.status(400).json({ success: false, message: 'Invalid signature' });
     }
   } catch (error) {
-    console.error('Error verifying payment:', error);
+    console.error('❌ Error verifying payment:', error);
     res.status(500).json({ error: 'Payment verification failed' });
   } finally {
     client.release();
