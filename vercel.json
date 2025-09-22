@@ -22,6 +22,13 @@
           "value": "nosniff"
         },
         {
+<<<<<<< HEAD
+=======
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+>>>>>>> fb9b26d03086cc64743488e5ee8ca0e3997fb7a9
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
         }
