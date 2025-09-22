@@ -1,4 +1,4 @@
-# 🚀 SkyBlue Python Launch - Production Ready
+# 🚀 MemeCODE Launch - Production Ready
 
 A modern, scalable web application for selling and accessing Python programming content with integrated payment processing, user authentication, and enterprise-grade security features.
 
@@ -45,7 +45,7 @@ A modern, scalable web application for selling and accessing Python programming 
 1. **Clone and Install**:
 ```bash
 git clone <repository-url>
-cd skyblue-python-launch
+cd MemeCODE-python-launch
 
 # Install frontend dependencies
 npm install
