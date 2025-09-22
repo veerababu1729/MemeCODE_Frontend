@@ -2,12 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Code2, Cpu, Database, Terminal, Braces, CircuitBoard } from 'lucide-react';
 import logo from '@/assets/logo.png';
-<<<<<<< HEAD
-import coverpage from '@assets/coverpage.png';
-
-=======
 import coverpage from '@/assets/coverpage.png';
->>>>>>> fb9b26d03086cc64743488e5ee8ca0e3997fb7a9
 interface EntryPageProps {
   onGetStarted: () => void;
 }
