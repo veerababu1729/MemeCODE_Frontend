@@ -1,6 +1,6 @@
 import { Code, FolderOpen, Trophy } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import pythonIllustration from '@/assets/python-illustration.jpg';
+import pythonIllustration from '@/assets/coverpage.png';
 
 const features = [
   {
@@ -13,7 +13,7 @@ const features = [
   {
     step: "Step 2", 
     title: "300+ Free Projects",
-    description: "Get access to 300+ free projects with complete source code. Real-world applications to build your portfolio.",
+    description: "Get access to 300+ free projects with complete source code from AI to MERN, java,Python which recruiters look for to hire you.",
     icon: FolderOpen,
     color: "text-primary-glow"
   },

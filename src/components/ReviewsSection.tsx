@@ -5,26 +5,26 @@ const reviews = [
   {
     name: "Ravi Kumar",
     role: "CSE Student",
-    content: "EE.Info changed my coding journey completely! The Telugu memes made learning Python so entertaining. Got placed in TCS with their projects!",
+    content: "MemeCode changed my coding journey completely! The Telugu memes made learning Python so entertaining. Got placed in TCS with their projects!",
     rating: 5,
     avatar: "RK"
   },
   {
-    name: "Priya Sharma",
+    name: "Priya Jambulapalli",
     role: "IT Graduate",
     content: "300+ projects with source code? This is gold! The DSA sheet is perfectly curated. No more getting lost in 3000+ LeetCode problems.",
     rating: 5,
     avatar: "PS"
   },
   {
-    name: "Venkat Reddy",
+    name: "Manohar P",
     role: "B.Tech Student",
-    content: "Finally, guidance that actually works! The 21-day Python course is like Venky's train scene - pure entertainment while learning.",
+    content: "Finally, I hate coding but The 21-day Python Ebook is like Venky's train scene - pure entertainment while learning. So easy to understand",
     rating: 5,
     avatar: "VR"
   },
   {
-    name: "Sameera Khan",
+    name: "Thulasi K",
     role: "ECE to IT Transition",
     content: "As an ECE student switching to coding, this was exactly what I needed. Clear, fun, and practical approach to learning.",
     rating: 5,
@@ -34,7 +34,7 @@ const reviews = [
 
 const ReviewsSection = () => {
   return (
-    <section className="py-20 px-4">
+    <section id="reviews" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -74,6 +74,17 @@ const ReviewsSection = () => {
               </p>
             </Card>
           ))}
+        </div>
+
+        {/* Highlighted Review */}
+        <div className="mt-8">
+          <Card className="relative p-6 border-2 border-green-500 bg-green-50 dark:bg-green-950/30">
+            <span className="absolute top-4 right-4 text-sm font-medium text-green-700 dark:text-green-300">Suresh Palkurthi</span>
+            <h3 className="text-lg font-semibold text-green-700 dark:text-green-400 mb-2">Highlighted Review</h3>
+            <p className="text-green-800 dark:text-green-300 leading-relaxed">
+              “Eamcet lo rank raka, degree lo join ayya adhi kuda tier3 college. Em cheyyalo ane confusion, guidance ledhu. appudu ee "MemeCODE - eBook" naku oka confidence ichindhi, elanti confidence ante even college lo placements rakapoyina offcampus lo job kotte confidence.”
+            </p>
+          </Card>
         </div>
       </div>
     </section>

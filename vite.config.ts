@@ -15,4 +15,26 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Production optimizations
+    minify: 'terser',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-toast', '@radix-ui/react-select'],
+        },
+      },
+    },
+    // Optimize for production
+    target: 'es2015',
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
+  },
+  // Environment variable handling
+  define: {
+    __DEV__: mode === 'development',
+  },
 }));
