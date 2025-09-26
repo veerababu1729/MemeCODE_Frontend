@@ -226,6 +226,21 @@ All colors MUST be HSL.
     }
   }
 
+  @keyframes matrix-shake {
+    0%, 100% { 
+      transform: translateX(0px) translateY(0px);
+    }
+    25% { 
+      transform: translateX(0.5px) translateY(0.5px);
+    }
+    50% { 
+      transform: translateX(-0.5px) translateY(-0.5px);
+    }
+    75% { 
+      transform: translateX(0.5px) translateY(-0.5px);
+    }
+  }
+
   /* Responsive cube styling */
   @media (max-width: 768px) {
     .cube-scene {

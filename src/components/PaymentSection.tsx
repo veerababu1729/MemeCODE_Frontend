@@ -74,31 +74,16 @@ const PaymentSection = () => {
             <PurchaseCounter />
           </div>
 
-          {/* Benefits List with Cover Image */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-center">
-            {/* Benefits List */}
-            <div className="space-y-4">
-              {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <span className="text-foreground">{benefit}</span>
-                </div>
-              ))}
-            </div>
-            
-            {/* Cover Image */}
-            <div className="flex justify-center lg:justify-start lg:pl-4">
-              <div className="relative">
-                <img 
-                  src={coverImage} 
-                  alt="Python in 21 Days Ebook Cover" 
-                  className="w-48 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
-                />
-                {/* Optional glow effect */}
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-              </div>
+          {/* Cover Image */}
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <img 
+                src={coverImage} 
+                alt="Python in 21 Days Ebook Cover" 
+                className="w-48 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              />
+              {/* Optional glow effect */}
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
             </div>
           </div>
 

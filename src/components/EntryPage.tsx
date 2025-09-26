@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Code2, Cpu, Database, Terminal, Braces, CircuitBoard } from 'lucide-react';
-import logo from '@/assets/logo.png';
-import coverpage from '@/assets/coverpage.png';
+import matrixImage from '@/assets/matrix.png';
 interface EntryPageProps {
   onGetStarted: () => void;
 }
@@ -65,19 +63,19 @@ const MatrixOrbs = () => {
 
   useEffect(() => {
     const generateOrbs = () => {
-      const orbCount = 8; // Reduced from 25 to 8 for less distraction
+      const orbCount = 2; // Further reduced from 8 to 4 for minimal distraction
       const newOrbs = Array.from({ length: orbCount }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        delay: Math.random() * 5, // Increased delay range for slower appearance
-        size: 0.6 + Math.random() * 0.3, // Smaller sizes
+        delay: Math.random() * 8, // Increased delay range for much slower appearance
+        size: 0.1 + Math.random() * 0.0, // Much smaller sizes
       }));
       setOrbs(newOrbs);
     };
 
     generateOrbs();
-    const interval = setInterval(generateOrbs, 8000); // Much less frequent regeneration (doubled from 4000 to 8000)
+    const interval = setInterval(generateOrbs, 12000); // Much less frequent regeneration (increased from 8000 to 12000)
     return () => clearInterval(interval);
   }, []);
 
@@ -92,7 +90,7 @@ const MatrixOrbs = () => {
             top: `${orb.y}%`,
             animationDelay: `${orb.delay}s`,
             transform: `scale(${orb.size})`,
-            opacity: 0.4, // Reduced opacity for less intensity
+            opacity: 0.1, // Much reduced opacity for minimal distraction
           }}
         />
       ))}
@@ -175,53 +173,48 @@ const EntryPage = ({ onGetStarted }: EntryPageProps) => {
         <div className="matrix-overlay" />
       </div>
       
-      
-      {/* Content + 3D layout */}
-      <div className={`relative z-20 w-full max-w-6xl mx-auto px-6 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 items-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        {/* Left: Text */}
-        <div className="text-center">
-          {/* Logo */}
-          <div className="mb-8 animate-fade-in">
-            <img 
-              src={logo} 
-              alt="EE.Info Logo" 
-              className="mx-auto w-32 h-32 drop-shadow-2xl hover:scale-110 transition-transform duration-300"
-            />
-          </div>
-          {/* Welcome Text */}
-          <div className="mb-10 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <h1 className="text-6xl md:text-7xl font-bold mb-4 text-white leading-tight drop-shadow-lg">Welcome to</h1>
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">EE.Info</h2>
-            <p className="text-xl md:text-2xl text-green-300 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">"Elantivi ante naku baga interest ra!"</p>
-          </div>
-          {/* Get Started Button */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <Button 
-              onClick={onGetStarted}
-              className="hero-button text-xl px-12 py-6 shadow-floating hover:shadow-glow transform hover:scale-105 transition-all duration-300 cursor-pointer"
-            >
-              Get Started
-            </Button>
-          </div>
-        </div>
-
-        {/* Right: 3D CS-Themed Cube */}
-        <div className="flex items-center justify-center pointer-events-none">
-          <div className="cube-scene">
-            <div className="cube">
-              <div className="cube-face cube-face--front"><Code2 className="w-10 h-10" /></div>
-              <div className="cube-face cube-face--back"><Terminal className="w-10 h-10" /></div>
-              <div className="cube-face cube-face--right"><Cpu className="w-10 h-10" /></div>
-              <div className="cube-face cube-face--left"><Database className="w-10 h-10" /></div>
-              <div className="cube-face cube-face--top"><Braces className="w-10 h-10" /></div>
-              <div className="cube-face cube-face--bottom"><CircuitBoard className="w-10 h-10" /></div>
-            </div>
-          </div>
+      {/* Matrix Image Section with Buttons */}
+      <div className="relative z-20 w-full flex flex-col items-center justify-center px-4">
+        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-green-400 mb-4 md:mb-6 text-center drop-shadow-lg">Select One</h3>
+        <div className="relative">
+          {/* Matrix Image */}
+          <img 
+            src={matrixImage} 
+            alt="Matrix Choice" 
+            className="w-80 sm:w-90 md:w-80 lg:w-96 xl:w-[28rem] h-auto drop-shadow-2xl matrix-image-animated"
+            style={{
+              animation: 'matrix-pulse 3s ease-in-out infinite, matrix-float 6s ease-in-out infinite, matrix-shake 0.1s ease-in-out infinite'
+            }}
+          />
+          
+          {/* Left Hand Button - "Code Hard" */}
+          <Button 
+            className="absolute bg-red-600 hover:bg-red-700 text-white px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm font-bold shadow-lg hover:shadow-red-500/50 transition-all duration-300"
+            style={{ 
+              left: '4px',
+              top: '60%',
+              transform: 'translateY(-50%)'
+            }}
+            onClick={() => window.open('https://share.google/images/CpiHraFg1wk8kNLsd', '_blank')}
+          >
+            Code Hard
+          </Button>
+          
+          {/* Right Hand Button - "Code with Memes" */}
+          <Button 
+            className="absolute bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+            style={{ 
+              right: '4px',
+              top: '60%',
+              transform: 'translateY(-50%)'
+            }}
+            onClick={onGetStarted}
+          >
+            Code with Memes
+          </Button>
         </div>
       </div>
       
-      {/* Slight dim overlay on small screens for contrast */}
-      <div className="absolute inset-0 md:hidden bg-background/40" />
     </div>
   );
 };
