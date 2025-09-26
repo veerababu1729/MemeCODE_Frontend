@@ -32,7 +32,7 @@ const PrivacyPolicy = () => {
           <div>
             <h3 className="font-medium text-foreground mb-2">How We Use Your Data</h3>
             <ul className="space-y-1">
-              <li>• Deliver "Python in 21 Days" ebook</li>
+              <li>• Deliver "MemeCODE" ebook</li>
               <li>• Send important updates about your purchase</li>
               <li>• Improve our educational content</li>
             </ul>

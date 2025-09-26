@@ -205,7 +205,7 @@ const PaymentForm = ({ onPaymentSuccess }: PaymentFormProps) => {
             Complete Your Purchase
           </CardTitle>
           <CardDescription className="text-sm sm:text-base">
-            Get access to premium coding Ebook for just {currentPriceDisplay}
+            Get access to premium coding Ebook for {currentPriceDisplay}
           </CardDescription>
         </CardHeader>
         

@@ -38,7 +38,7 @@ const ContactUs = () => {
           
           <div className="bg-muted/50 p-4 rounded-lg">
             <p className="text-sm">
-              For ebook access issues, payment queries, or technical support related to "Python in 21 Days" ebook, 
+              For ebook access issues, payment queries, or technical support related to "MemeCODE" ebook, 
               reach out to us. We typically respond within 24 hours.
             </p>
           </div>

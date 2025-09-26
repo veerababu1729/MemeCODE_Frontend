@@ -23,7 +23,7 @@ const RefundPolicy = () => {
           <div className="bg-red-50 dark:bg-red-950/20 p-4 rounded-lg border border-red-200 dark:border-red-800">
             <p className="font-medium text-red-700 dark:text-red-400 mb-2">No Refund Policy</p>
             <p className="text-red-600 dark:text-red-300">
-              Due to the digital nature of "Python in 21 Days" ebook, all sales are final. No refunds available.
+              Due to the digital nature of "MemeCODE" ebook, all sales are final. No refunds available.
             </p>
           </div>
           

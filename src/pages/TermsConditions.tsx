@@ -22,7 +22,7 @@ const TermsConditions = () => {
         <div className="space-y-4 text-muted-foreground text-sm">
           <div>
             <h3 className="font-medium text-foreground mb-2">Usage Rights</h3>
-            <p>Personal use only. No redistribution or resale of "Python in 21 Days" ebook content.</p>
+            <p>Personal use only. No redistribution or resale of "MemeCODE" ebook content.</p>
           </div>
           
           <div>
