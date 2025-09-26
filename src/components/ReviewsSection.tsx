@@ -1,5 +1,6 @@
 import { Star } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useState, useEffect, useRef } from 'react';
 
 const reviews = [
   {
@@ -33,10 +34,78 @@ const reviews = [
 ];
 
 const ReviewsSection = () => {
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [cardVisibility, setCardVisibility] = useState<boolean[]>(new Array(reviews.length).fill(false));
+  const [highlightVisible, setHighlightVisible] = useState(false);
+  
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const highlightRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const headerObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHeaderVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    const cardObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0');
+            setCardVisibility(prev => {
+              const newVisibility = [...prev];
+              newVisibility[index] = true;
+              return newVisibility;
+            });
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const highlightObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHighlightVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    // Observe header
+    if (headerRef.current) {
+      headerObserver.observe(headerRef.current);
+    }
+
+    // Observe cards
+    cardRefs.current.forEach((ref) => {
+      if (ref) cardObserver.observe(ref);
+    });
+
+    // Observe highlight
+    if (highlightRef.current) {
+      highlightObserver.observe(highlightRef.current);
+    }
+
+    return () => {
+      headerObserver.disconnect();
+      cardObserver.disconnect();
+      highlightObserver.disconnect();
+    };
+  }, []);
+
   return (
     <section id="reviews" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-600 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             We don't tell about us,
             <span className="gradient-text"> but our users do</span>
@@ -49,9 +118,14 @@ const ReviewsSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {reviews.map((review, index) => (
             <Card 
-              key={index} 
-              className="p-6 glass-card hover:shadow-floating transition-all duration-300 hover:-translate-y-1 group"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              key={index}
+              ref={(el) => (cardRefs.current[index] = el)}
+              data-index={index}
+              className={`p-6 glass-card hover:shadow-floating transition-all duration-500 hover:-translate-y-2 hover:scale-105 group ${cardVisibility[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
+              style={{ 
+                transitionDelay: cardVisibility[index] ? `${index * 0.1}s` : '0s',
+                transformOrigin: 'left center'
+              }}
             >
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold mr-3">
@@ -77,8 +151,12 @@ const ReviewsSection = () => {
         </div>
 
         {/* Highlighted Review */}
-        <div className="mt-8">
-          <Card className="relative p-6 border-2 border-green-500 bg-green-50 dark:bg-green-950/30">
+        <div 
+          ref={highlightRef}
+          className={`mt-8 transition-all duration-600 ${highlightVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} 
+          style={{ transitionDelay: highlightVisible ? '0.2s' : '0s' }}
+        >
+          <Card className="relative p-6 border-2 border-green-500 bg-green-50 dark:bg-green-950/30 hover:shadow-floating transition-all duration-300 hover:scale-105 highlight-glow highlight-border">
             <span className="absolute top-4 right-4 text-sm font-medium text-green-700 dark:text-green-300">Suresh Palkurthi</span>
             <h3 className="text-lg font-semibold text-green-700 dark:text-green-400 mb-2">Highlighted Review</h3>
             <p className="text-green-800 dark:text-green-300 leading-relaxed">

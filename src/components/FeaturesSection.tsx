@@ -1,6 +1,7 @@
 import { Code, FolderOpen, Trophy } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import pythonIllustration from '@/assets/coverpage.png';
+import { useState, useEffect, useRef } from 'react';
 
 const features = [
   {
@@ -27,15 +28,94 @@ const features = [
 ];
 
 const FeaturesSection = () => {
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [cardVisibility, setCardVisibility] = useState<boolean[]>(new Array(features.length).fill(false));
+  const [imageVisible, setImageVisible] = useState(false);
+  const [typingComplete, setTypingComplete] = useState(false);
+  
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const headerObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHeaderVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    const cardObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0');
+            setCardVisibility(prev => {
+              const newVisibility = [...prev];
+              newVisibility[index] = true;
+              return newVisibility;
+            });
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const imageObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setImageVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    // Observe header
+    if (headerRef.current) {
+      headerObserver.observe(headerRef.current);
+    }
+
+    // Observe cards
+    cardRefs.current.forEach((ref) => {
+      if (ref) cardObserver.observe(ref);
+    });
+
+    // Observe image
+    if (imageRef.current) {
+      imageObserver.observe(imageRef.current);
+    }
+
+    return () => {
+      headerObserver.disconnect();
+      cardObserver.disconnect();
+      imageObserver.disconnect();
+    };
+  }, []);
+
+  // Handle typing animation completion
+  useEffect(() => {
+    if (headerVisible) {
+      const timer = setTimeout(() => {
+        setTypingComplete(true);
+      }, 3500); // 3s typing + 0.5s buffer
+      return () => clearTimeout(timer);
+    }
+  }, [headerVisible]);
+
   return (
     <section className="py-20 px-4 bg-gradient-to-br from-muted/30 to-background">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-600 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             What you <span className="gradient-text">get?</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            One Ebook = All Placements Preparation
+          <p className={`text-xl text-muted-foreground max-w-2xl mx-auto inline-block ${headerVisible ? (typingComplete ? 'typing-complete' : 'typing-effect') : ''}`}>
+            {headerVisible ? 'One Ebook = All Placements Preparation' : ''}
           </p>
         </div>
         
@@ -45,8 +125,13 @@ const FeaturesSection = () => {
             {features.map((feature, index) => (
               <Card 
                 key={index}
-                className="p-6 glass-card hover:shadow-card transition-all duration-300 hover:scale-105 group cursor-pointer"
-                style={{ animationDelay: `${index * 0.2}s` }}
+                ref={(el) => (cardRefs.current[index] = el)}
+                data-index={index}
+                className={`p-6 glass-card hover:shadow-card transition-all duration-500 hover:scale-105 hover:-translate-y-2 group cursor-pointer ${cardVisibility[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
+                style={{ 
+                  transitionDelay: cardVisibility[index] ? `${index * 0.15}s` : '0s',
+                  transformOrigin: 'left center'
+                }}
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
@@ -74,13 +159,18 @@ const FeaturesSection = () => {
           
           {/* Illustration */}
           <div className="flex justify-center lg:justify-end">
-            <div className="relative animate-fade-in">
-              <img 
-                src={pythonIllustration} 
-                alt="Python Learning Illustration"
-                className="rounded-2xl shadow-floating max-w-full h-auto hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent rounded-2xl" />
+            <div 
+              ref={imageRef}
+              className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`} 
+              style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
+            >
+              <div className="coverpage-container">
+                <img 
+                  src={pythonIllustration} 
+                  alt="Python Learning Illustration"
+                  className="rounded-xl shadow-floating max-w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
+                />
+              </div>
             </div>
           </div>
         </div>

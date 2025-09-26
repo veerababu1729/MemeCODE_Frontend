@@ -77,11 +77,13 @@ const PaymentSection = () => {
           {/* Cover Image */}
           <div className="flex justify-center mb-8">
             <div className="relative">
-              <img 
-                src={coverImage} 
-                alt="Python in 21 Days Ebook Cover" 
-                className="w-48 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
-              />
+              <div className="coverpage-container w-fit">
+                <img 
+                  src={coverImage} 
+                  alt="Python in 21 Days Ebook Cover" 
+                  className="w-48 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative z-10"
+                />
+              </div>
               {/* Optional glow effect */}
               <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
             </div>

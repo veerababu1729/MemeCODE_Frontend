@@ -714,6 +714,236 @@ All colors MUST be HSL.
     animation: confetti-sparkle 0.8s ease-out;
   }
 
+  /* Smooth entrance animations for cards */
+  @keyframes slide-up-fade {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-in-left {
+    0% {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-in-right {
+    0% {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes gentle-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* Animation classes */
+  .animate-slide-up-fade {
+    animation: slide-up-fade 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animate-gentle-bounce {
+    animation: gentle-bounce 2s ease-in-out infinite;
+  }
+
+  /* Subtle highlight effects */
+  .highlight-glow {
+    animation: highlight-pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes highlight-pulse {
+    0%, 100% {
+      box-shadow: 
+        0 4px 15px rgba(34, 197, 94, 0.2),
+        0 0 0 1px rgba(34, 197, 94, 0.3);
+    }
+    50% {
+      box-shadow: 
+        0 6px 25px rgba(34, 197, 94, 0.35),
+        0 0 0 2px rgba(34, 197, 94, 0.4);
+    }
+  }
+
+  .highlight-border {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+      rgba(34, 197, 94, 0.6), 
+      rgba(34, 197, 94, 0.3), 
+      rgba(34, 197, 94, 0.6)
+    );
+    border-radius: inherit;
+    z-index: -1;
+    animation: border-shimmer 3s linear infinite;
+  }
+
+  @keyframes border-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Coverpage background effects */
+  .coverpage-container {
+    position: relative;
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.08) 0%,
+      rgba(34, 197, 94, 0.1) 50%,
+      rgba(16, 185, 129, 0.08) 100%
+    );
+    border-radius: 1rem;
+    padding: 1.5rem;
+    animation: coverpage-glow 6s ease-in-out infinite;
+  }
+
+  .coverpage-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg,
+      rgba(59, 130, 246, 0.25),
+      rgba(34, 197, 94, 0.3),
+      rgba(16, 185, 129, 0.25)
+    );
+    border-radius: inherit;
+    z-index: -1;
+    animation: coverpage-border-rotate 8s linear infinite;
+  }
+
+  @keyframes coverpage-glow {
+    0%, 100% {
+      background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.06) 0%,
+        rgba(34, 197, 94, 0.08) 50%,
+        rgba(16, 185, 129, 0.06) 100%
+      );
+      transform: scale(1);
+    }
+    50% {
+      background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.12) 0%,
+        rgba(34, 197, 94, 0.15) 50%,
+        rgba(16, 185, 129, 0.12) 100%
+      );
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes coverpage-border-rotate {
+    0% {
+      background: linear-gradient(0deg,
+        rgba(59, 130, 246, 0.25),
+        rgba(34, 197, 94, 0.3),
+        rgba(16, 185, 129, 0.25)
+      );
+    }
+    25% {
+      background: linear-gradient(90deg,
+        rgba(59, 130, 246, 0.25),
+        rgba(34, 197, 94, 0.3),
+        rgba(16, 185, 129, 0.25)
+      );
+    }
+    50% {
+      background: linear-gradient(180deg,
+        rgba(59, 130, 246, 0.25),
+        rgba(34, 197, 94, 0.3),
+        rgba(16, 185, 129, 0.25)
+      );
+    }
+    75% {
+      background: linear-gradient(270deg,
+        rgba(59, 130, 246, 0.25),
+        rgba(34, 197, 94, 0.3),
+        rgba(16, 185, 129, 0.25)
+      );
+    }
+    100% {
+      background: linear-gradient(360deg,
+        rgba(59, 130, 246, 0.25),
+        rgba(34, 197, 94, 0.3),
+        rgba(16, 185, 129, 0.25)
+      );
+    }
+  }
+
+  /* Typing effect animation */
+  .typing-effect {
+    overflow: hidden;
+    border-right: 2px solid hsl(var(--primary));
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { 
+      width: 0;
+    }
+    to { 
+      width: 100%;
+    }
+  }
+
+  @keyframes blink-caret {
+    from, to { 
+      border-color: transparent;
+    }
+    50% { 
+      border-color: hsl(var(--primary));
+    }
+  }
+
+  /* Typing effect without caret for when animation completes */
+  .typing-complete {
+    border-right: none;
+  }
+
   @keyframes confetti-sparkle {
     0% {
       opacity: 0;
