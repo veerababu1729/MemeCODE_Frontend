@@ -52,7 +52,7 @@ const PaymentSection = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-2">
               Dasara Special Price Ends In:
             </h2>
-            <p className="text-sm text-muted-foreground">After timer ends, price returns to ₹1,999/-</p>
+            <p className="text-sm text-muted-foreground">After timer ends, price = ₹1,999/-</p>
           </div>
 
           {/* Countdown Timer inside the card */}
@@ -66,7 +66,7 @@ const PaymentSection = () => {
               <span className="text-2xl text-muted-foreground line-through">₹1999</span>
               <span className="text-5xl md:text-6xl font-bold gradient-text">₹99</span>
             </div>
-            <p className="text-base md:text-lg text-muted-foreground">One-time payment • Lifetime access</p>
+            <p className="text-base md:text-lg text-muted-foreground">One payment • Lifetime access</p>
           </div>
 
           {/* Purchase Counter for Social Proof */}

@@ -35,7 +35,7 @@ const FeaturesSection = () => {
             What you <span className="gradient-text">get?</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            A complete learning journey from Python basics to advanced projects and DSA mastery
+            One Ebook = All Placements Preparation
           </p>
         </div>
         

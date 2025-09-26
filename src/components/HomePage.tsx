@@ -277,7 +277,7 @@ const HomePage = () => {
             <a href="/privacy" className="hover:text-muted-foreground/80 transition-colors">Privacy Policy</a>
           </div>
           <div className="text-center mt-4 text-xs text-muted-foreground/50">
-            © 2024 EE.Info. All rights reserved.
+            © 2024 EE.Info - All rights reserved.
           </div>
         </div>
       </footer>
