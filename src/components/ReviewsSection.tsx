@@ -26,7 +26,7 @@ const reviews = [
   {
     name: "Thulasi K",
     role: "ECE to IT Transition",
-    content: "As an ECE student switching to coding, this was exactly what I needed. Clear, fun, and practical approach to learning.",
+    content: "As an ECE student switching to coding, this was exactly what I needed. oka inteview ki em kavalo anni oke chota unnai",
     rating: 5,
     avatar: "SK"
   }

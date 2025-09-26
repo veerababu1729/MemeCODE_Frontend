@@ -264,6 +264,24 @@ const HomePage = () => {
         </div>
       </section>
       
+      {/* Footer */}
+      <footer className="bg-background/80 border-t border-border/20 py-8 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground/60">
+            <a href="/contact" className="hover:text-muted-foreground/80 transition-colors">Contact Us</a>
+            <span className="text-muted-foreground/40">•</span>
+            <a href="/terms" className="hover:text-muted-foreground/80 transition-colors">Terms and Conditions</a>
+            <span className="text-muted-foreground/40">•</span>
+            <a href="/refunds" className="hover:text-muted-foreground/80 transition-colors">Cancellations and Refunds</a>
+            <span className="text-muted-foreground/40">•</span>
+            <a href="/privacy" className="hover:text-muted-foreground/80 transition-colors">Privacy Policy</a>
+          </div>
+          <div className="text-center mt-4 text-xs text-muted-foreground/50">
+            © 2024 EE.Info. All rights reserved.
+          </div>
+        </div>
+      </footer>
+
       {/* Scroll to Top Button */}
       {showScrollTop && (
         <Button
