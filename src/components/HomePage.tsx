@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import PaymentSection from './PaymentSection';
 import ReviewsSection from './ReviewsSection';
 import FeaturesSection from './FeaturesSection';
+import FAQSection from './FAQSection';
 import { useState, useEffect, useRef } from 'react';
 import matrixImage from '@/assets/matrix.png';
 
@@ -191,6 +192,9 @@ const HomePage = () => {
       
       {/* Features Section */}
       <FeaturesSection />
+      
+      {/* FAQ Section */}
+      <FAQSection />
       
       {/* Final CTA Section */}
       <section className="pt-20 pb-8 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
