@@ -43,7 +43,7 @@ const FAQSection = () => {
                 className="w-full p-6 text-left justify-between hover:bg-transparent"
                 onClick={() => toggleFAQ(faq.id)}
               >
-                <span className="text-lg font-semibold text-foreground">
+                <span className="text-base md:text-lg font-normal text-foreground">
                   {faq.question}
                 </span>
                 {openFAQ === faq.id ? (
