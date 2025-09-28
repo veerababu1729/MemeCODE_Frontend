@@ -101,9 +101,9 @@ const ResetPasswordForm = () => {
 
       if (result.success) {
         setSuccess(true);
-        // Redirect to home with login trigger after 3 seconds
+        // Redirect to home page with login trigger after 3 seconds
         setTimeout(() => {
-          navigate('/?showLogin=true');
+          navigate('/home?showLogin=true');
         }, 3000);
       } else {
         throw new Error(result.error || 'Password reset failed');
@@ -137,7 +137,7 @@ const ResetPasswordForm = () => {
                   Redirecting to login in 3 seconds...
                 </p>
                 <Button
-                  onClick={() => navigate('/?showLogin=true')}
+                  onClick={() => navigate('/home?showLogin=true')}
                   className="w-full bg-green-600 hover:bg-green-700 text-white"
                 >
                   Go to Login Now
@@ -254,7 +254,7 @@ const ResetPasswordForm = () => {
                   type="button"
                   variant="link"
                   className="text-primary hover:underline"
-                  onClick={() => navigate('/?showLogin=true')}
+                  onClick={() => navigate('/home?showLogin=true')}
                 >
                   ← Back to Login
                 </Button>
