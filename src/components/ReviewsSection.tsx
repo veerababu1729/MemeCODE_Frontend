@@ -20,7 +20,7 @@ const reviews = [
   {
     name: "Manohar P",
     role: "B.Tech Student",
-    content: "Finally, I hate coding but The 21-day Python Ebook is like Venky's train scene - pure entertainment while learning. So easy to understand",
+    content: "I hate coding but 21-day Python Ebook is like Venky's train scene - pure entertainment while learning. So easy to understand with memes",
     rating: 5,
     avatar: "VR"
   },

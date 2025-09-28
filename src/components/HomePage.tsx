@@ -2,10 +2,10 @@ import { ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PaymentSection from './PaymentSection';
 import ReviewsSection from './ReviewsSection';
-import FeaturesSection from './FeaturesSection';
 import FAQSection from './FAQSection';
 import { useState, useEffect, useRef } from 'react';
 import matrixImage from '@/assets/matrix.png';
+import pythonIllustration from '@/assets/coverpage.png';
 
 // Matrix Digital Rain Component
 const MatrixRain = () => {
@@ -96,6 +96,8 @@ const MatrixOrbs = () => {
 
 const HomePage = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [imageVisible, setImageVisible] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -104,6 +106,25 @@ const HomePage = () => {
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const imageObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setImageVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (imageRef.current) {
+      imageObserver.observe(imageRef.current);
+    }
+
+    return () => {
+      imageObserver.disconnect();
+    };
   }, []);
   
   const scrollToTop = () => {
@@ -182,16 +203,33 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Reviews Section */}
-      <ReviewsSection />
+      {/* Python Illustration Section */}
+      <section className="py-16 px-4 bg-gradient-to-br from-muted/30 to-background">
+        <div className="max-w-6xl mx-auto flex justify-center">
+          <div 
+            ref={imageRef}
+            className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`} 
+            style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
+          >
+            <div className="coverpage-container">
+              <img 
+                src={pythonIllustration} 
+                alt="Python Learning Illustration"
+                className="rounded-xl shadow-floating max-w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Payment Section */}
       <PaymentSection />
+
+      {/* Reviews Section */}
+      <ReviewsSection />
       
       
       
-      {/* Features Section */}
-      <FeaturesSection />
       
       {/* FAQ Section */}
       <FAQSection />

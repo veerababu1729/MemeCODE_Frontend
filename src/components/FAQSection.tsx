@@ -12,6 +12,11 @@ const FAQSection = () => {
       question: "Why Python? Why not C++, Java?",
       answer: "AI is everywhere; it's built with Python.",
       image: faq1Image,
+    },
+    {
+      id: 2,
+      question: "Do I get free certificate?",
+      answer: "Yes, you will receive on your mail",
     }
   ];
 
@@ -65,19 +70,21 @@ const FAQSection = () => {
                         </p>
                       </div>
                       
-                      {/* Image - Centered on both mobile and desktop */}
-                      <div className="w-full flex justify-center">
-                        <img
-                          src={faq.image}
-                          alt={`FAQ ${faq.id} illustration`}
-                          className="w-full max-w-xs md:max-w-sm lg:max-w-md h-auto rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                          onError={(e) => {
-                            // Fallback if image doesn't exist
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                          }}
-                        />
-                      </div>
+                      {/* Image - Centered on both mobile and desktop (only if image exists) */}
+                      {faq.image && (
+                        <div className="w-full flex justify-center">
+                          <img
+                            src={faq.image}
+                            alt={`FAQ ${faq.id} illustration`}
+                            className="w-full max-w-xs md:max-w-sm lg:max-w-md h-auto rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                            onError={(e) => {
+                              // Fallback if image doesn't exist
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
