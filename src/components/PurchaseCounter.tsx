@@ -55,35 +55,35 @@ const PurchaseCounter = ({ initialCount = 1275, className = '' }: PurchaseCounte
   };
 
   return (
-    <div className={`inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-full shadow-sm ${className}`}>
-      <div className="flex items-center gap-1.5">
+    <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-full shadow-sm text-xs sm:text-sm ${className}`}>
+      <div className="flex items-center gap-1 sm:gap-1.5">
         <div className="relative">
-          <Users className="w-4 h-4 text-green-600" />
+          <Users className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
           {isAnimating && (
-            <div className="absolute inset-0 w-4 h-4 bg-green-400 rounded-full animate-ping opacity-75" />
+            <div className="absolute inset-0 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-ping opacity-75" />
           )}
         </div>
-        <TrendingUp className="w-3 h-3 text-green-500" />
+        <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-500" />
       </div>
       
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5 sm:gap-1">
         <span 
-          className={`font-semibold text-green-700 transition-all duration-300 ${
+          className={`font-semibold text-green-700 transition-all duration-300 text-xs sm:text-sm ${
             isAnimating ? 'scale-110 text-green-800' : ''
           }`}
         >
           {formatCount(count)}
         </span>
-        <span className="text-sm text-green-600 font-medium">
+        <span className="text-xs sm:text-sm text-green-600 font-medium whitespace-nowrap">
           people purchased
         </span>
       </div>
       
       {isAnimating && (
-        <div className="flex items-center gap-1 animate-bounce">
-          <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-          <div className="w-1 h-1 bg-green-500 rounded-full animation-delay-100"></div>
-          <div className="w-1 h-1 bg-green-500 rounded-full animation-delay-200"></div>
+        <div className="flex items-center gap-0.5 sm:gap-1 animate-bounce">
+          <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 bg-green-500 rounded-full"></div>
+          <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 bg-green-500 rounded-full animation-delay-100"></div>
+          <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 bg-green-500 rounded-full animation-delay-200"></div>
         </div>
       )}
     </div>

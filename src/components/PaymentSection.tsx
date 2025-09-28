@@ -59,8 +59,8 @@ const PaymentSection = () => {
             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-accent/20 text-accent-foreground text-sm font-medium mb-4">
               <span>Limited Time Offer</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-2">
-              Dasara Special Price Ends In:
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+              Dasara Special Price:
             </h2>
             <p className="text-sm text-muted-foreground">After timer ends, price = ₹1,999/-</p>
           </div>
@@ -76,7 +76,7 @@ const PaymentSection = () => {
               <span className="text-2xl text-muted-foreground line-through">₹1999</span>
               <span className="text-5xl md:text-6xl font-bold gradient-text">₹99</span>
             </div>
-            <p className="text-base md:text-lg text-muted-foreground">One payment • Lifetime access</p>
+            <p className="text-sm text-muted-foreground">One payment • Lifetime access</p>
           </div>
 
           {/* Purchase Counter for Social Proof */}
@@ -99,15 +99,54 @@ const PaymentSection = () => {
             </div>
           </div>
 
-          {/* Payment Button (green) with shining effect */}
+          {/* Ultra-Enhanced Payment Button with maximum sparkle effects */}
           <Button 
             onClick={handlePaymentClick}
-            className="w-full text-xl md:text-2xl py-5 md:py-6 group bg-green-600 hover:bg-green-700 text-white relative overflow-hidden shine-button"
+            className="w-full text-lg sm:text-xl md:text-2xl py-6 sm:py-7 md:py-8 px-6 sm:px-8 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40 animate-pulse hover:animate-none"
           >
-            <CreditCard className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-            Get My Ebook Now
-            {/* Shining effect overlay */}
-            <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
+            {/* Continuous sparkle background */}
+            <div className="absolute inset-0 opacity-40">
+              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping"></div>
+              <div className="absolute top-4 right-6 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-300"></div>
+              <div className="absolute bottom-3 left-8 w-1 h-1 bg-yellow-200 rounded-full animate-ping animation-delay-500"></div>
+              <div className="absolute bottom-5 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
+              <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-yellow-300 rounded-full animate-ping animation-delay-1000"></div>
+              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-1200"></div>
+              <div className="absolute top-6 left-1/2 w-0.5 h-0.5 bg-yellow-400 rounded-full animate-ping animation-delay-200"></div>
+              <div className="absolute bottom-6 right-1/2 w-0.5 h-0.5 bg-white rounded-full animate-pulse animation-delay-800"></div>
+              <div className="absolute top-1/4 left-6 w-0.5 h-0.5 bg-yellow-200 rounded-full animate-ping animation-delay-600"></div>
+              <div className="absolute bottom-1/4 right-8 w-0.5 h-0.5 bg-white rounded-full animate-pulse animation-delay-400"></div>
+            </div>
+            
+            {/* Double shining sweep effect */}
+            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-in-out"></div>
+            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-yellow-300/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1200 ease-in-out animation-delay-200"></div>
+            
+            {/* Pulsing border with glow */}
+            <div className="absolute inset-0 rounded-xl border-2 border-white/30 group-hover:border-yellow-300/60 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:shadow-[0_0_30px_rgba(255,235,59,0.5)]"></div>
+            
+            {/* Rotating sparkle ring */}
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute -top-1 left-1/4 w-1 h-1 bg-yellow-400 rounded-full animate-spin"></div>
+              <div className="absolute -top-1 right-1/4 w-1 h-1 bg-white rounded-full animate-spin animation-delay-500"></div>
+              <div className="absolute -bottom-1 left-1/3 w-1 h-1 bg-yellow-300 rounded-full animate-spin animation-delay-300"></div>
+              <div className="absolute -bottom-1 right-1/3 w-1 h-1 bg-white rounded-full animate-spin animation-delay-700"></div>
+            </div>
+            
+            {/* Button content with enhanced effects */}
+            <div className="relative flex items-center justify-center gap-2 sm:gap-3">
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+              <span className="tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(255,235,59,0.6)]">Get My Ebook Now</span>
+              
+              {/* Multiple floating sparkles */}
+              <div className="absolute -top-2 -right-2 w-2 h-2 bg-yellow-300 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-all duration-300"></div>
+              <div className="absolute -top-1 -left-1 w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-all duration-300 animation-delay-200"></div>
+              <div className="absolute -bottom-2 -right-1 w-1 h-1 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-all duration-300 animation-delay-400"></div>
+            </div>
+            
+            {/* Enhanced bottom glow with sparkle trail */}
+            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-4/5 h-2 bg-green-400/60 blur-sm group-hover:bg-yellow-300/80 group-hover:h-3 transition-all duration-300"></div>
+            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-white/50 blur-sm group-hover:bg-yellow-200/70 transition-all duration-300"></div>
           </Button>
 
           {/* Login link for existing users */}

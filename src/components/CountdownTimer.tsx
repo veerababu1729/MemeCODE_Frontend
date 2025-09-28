@@ -29,26 +29,26 @@ const CountdownTimer = () => {
   const formatTime = (time: number) => time.toString().padStart(2, '0');
 
   return (
-    <div className="flex items-center justify-center gap-4 mb-6">
+    <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6">
       <div className="text-center">
-        <div className="bg-primary text-primary-foreground rounded-lg px-4 py-3 text-2xl font-bold min-w-16 shadow-card">
+        <div className="bg-primary text-primary-foreground rounded-lg px-2 sm:px-4 py-2 sm:py-3 text-lg sm:text-2xl font-bold min-w-12 sm:min-w-16 shadow-card">
           {formatTime(timeLeft.hours)}
         </div>
-        <p className="text-sm text-muted-foreground mt-1">Hours</p>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">Hours</p>
       </div>
-      <div className="text-2xl font-bold text-primary">:</div>
+      <div className="text-lg sm:text-2xl font-bold text-primary">:</div>
       <div className="text-center">
-        <div className="bg-primary text-primary-foreground rounded-lg px-4 py-3 text-2xl font-bold min-w-16 shadow-card">
+        <div className="bg-primary text-primary-foreground rounded-lg px-2 sm:px-4 py-2 sm:py-3 text-lg sm:text-2xl font-bold min-w-12 sm:min-w-16 shadow-card">
           {formatTime(timeLeft.minutes)}
         </div>
-        <p className="text-sm text-muted-foreground mt-1">Minutes</p>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">Minutes</p>
       </div>
-      <div className="text-2xl font-bold text-primary">:</div>
+      <div className="text-lg sm:text-2xl font-bold text-primary">:</div>
       <div className="text-center">
-        <div className="bg-primary text-primary-foreground rounded-lg px-4 py-3 text-2xl font-bold min-w-16 shadow-card">
+        <div className="bg-primary text-primary-foreground rounded-lg px-2 sm:px-4 py-2 sm:py-3 text-lg sm:text-2xl font-bold min-w-12 sm:min-w-16 shadow-card">
           {formatTime(timeLeft.seconds)}
         </div>
-        <p className="text-sm text-muted-foreground mt-1">Seconds</p>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">Seconds</p>
       </div>
     </div>
   );

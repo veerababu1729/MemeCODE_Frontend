@@ -700,13 +700,49 @@ All colors MUST be HSL.
     }
   }
 
-  /* Animation delay utilities for purchase counter */
+  /* Animation delay utilities for purchase counter and sparkle effects */
   .animation-delay-100 {
     animation-delay: 0.1s;
   }
 
   .animation-delay-200 {
     animation-delay: 0.2s;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 0.3s;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+
+  .animation-delay-700 {
+    animation-delay: 0.7s;
+  }
+
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+
+  .animation-delay-1200 {
+    animation-delay: 1.2s;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+
+  .animation-delay-800 {
+    animation-delay: 0.8s;
   }
 
   /* Confetti Animation */
