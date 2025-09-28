@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import CountdownTimer from './CountdownTimer';
 import PurchaseCounter from './PurchaseCounter';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PaymentFlow from './PaymentFlow';
 import AuthenticationFlow from './AuthenticationFlow';
 import coverImage from '@/assets/coverpage.png';
@@ -11,6 +11,16 @@ import coverImage from '@/assets/coverpage.png';
 const PaymentSection = () => {
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [showLoginFlow, setShowLoginFlow] = useState(false);
+  
+  // Check URL parameters to auto-show login
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('showLogin') === 'true') {
+      setShowLoginFlow(true);
+      // Clean up URL parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
   
   const benefits = [
     "Learn Coding (in python) with memes in just 21 days.",
