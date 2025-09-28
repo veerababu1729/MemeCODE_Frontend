@@ -200,8 +200,130 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-pro
 // Email configuration with multiple provider support
 let emailTransporter;
 
-if (process.env.SENDGRID_API_KEY) {
-  // SendGrid configuration (recommended for production)
+if (process.env.BREVO_API_KEY) {
+  // Brevo configuration using HTTP API (transactional emails)
+  console.log('🔧 Configuring Brevo email service via HTTP API...');
+  
+  // Create a custom transporter that uses Brevo's transactional API
+  emailTransporter = {
+    sendMail: async (mailOptions) => {
+      try {
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'api-key': process.env.BREVO_API_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sender: {
+              name: mailOptions.from.name || 'MemeCODE',
+              email: mailOptions.from.address || mailOptions.from
+            },
+            to: [{
+              email: mailOptions.to,
+              name: mailOptions.to.split('@')[0] // Use email prefix as name
+            }],
+            subject: mailOptions.subject,
+            htmlContent: mailOptions.html,
+            textContent: mailOptions.text
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Brevo API error: ${errorData.message || response.statusText}`);
+        }
+
+        const result = await response.json();
+        return {
+          messageId: result.messageId,
+          response: `250 Message queued as ${result.messageId}`
+        };
+      } catch (error) {
+        console.error('Brevo API error:', error);
+        throw error;
+      }
+    },
+    verify: (callback) => {
+      // Test the API key by making a simple request
+      fetch('https://api.brevo.com/v3/account', {
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          callback(null, true);
+        } else {
+          callback(new Error(`Brevo API authentication failed: ${response.status}`), false);
+        }
+      })
+      .catch(error => {
+        callback(error, false);
+      });
+    }
+  };
+} else if (process.env.RESEND_API_KEY) {
+  // Resend configuration using HTTP API (more reliable than SMTP)
+  console.log('🔧 Configuring Resend email service via HTTP API...');
+  
+  // Create a custom transporter that uses Resend's HTTP API
+  emailTransporter = {
+    sendMail: async (mailOptions) => {
+      try {
+        const response = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: mailOptions.from.address || mailOptions.from,
+            to: [mailOptions.to],
+            subject: mailOptions.subject,
+            html: mailOptions.html,
+            text: mailOptions.text
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Resend API error: ${errorData.message || response.statusText}`);
+        }
+
+        const result = await response.json();
+        return {
+          messageId: result.id,
+          response: `250 Message queued as ${result.id}`
+        };
+      } catch (error) {
+        console.error('Resend API error:', error);
+        throw error;
+      }
+    },
+    verify: (callback) => {
+      // Test the API key by making a simple request
+      fetch('https://api.resend.com/domains', {
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          callback(null, true);
+        } else {
+          callback(new Error(`Resend API authentication failed: ${response.status}`), false);
+        }
+      })
+      .catch(error => {
+        callback(error, false);
+      });
+    }
+  };
+} else if (process.env.SENDGRID_API_KEY) {
+  // SendGrid configuration
   emailTransporter = nodemailer.createTransport({
     service: 'SendGrid',
     auth: {
@@ -230,13 +352,17 @@ if (process.env.SENDGRID_API_KEY) {
     SES: new aws.SES({ apiVersion: '2010-12-01' })
   });
 } else {
-  // Gmail configuration (fallback)
+  // Gmail configuration (basic - let's see what happens without custom timeouts)
+  console.log('🔧 Configuring Gmail SMTP with basic settings...');
   emailTransporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER || 'your-email@gmail.com',
       pass: process.env.EMAIL_PASS || 'your-app-password'
-    }
+    },
+    // Enable debug logging to see exactly what's happening
+    debug: true,
+    logger: true
   });
 }
 
@@ -257,7 +383,7 @@ const sendPasswordResetEmail = async (email, resetToken, userName = '') => {
   const mailOptions = {
     from: {
       name: 'MemeCODE Team',
-      address: process.env.EMAIL_USER || 'eefriends1729@gmail.com'
+      address: process.env.EMAIL_USER || 'noreply@9963392.brevosend.com'
     },
     to: email,
     subject: 'Reset Your MemeCODE Account Password',
@@ -342,8 +468,14 @@ const sendPasswordResetEmail = async (email, resetToken, userName = '') => {
   };
 
   try {
+    console.log('📧 Sending email with options:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
+    
     const info = await emailTransporter.sendMail(mailOptions);
-    console.log('✅ Password reset email sent successfully:', info.messageId);
+    console.log('✅ Password reset email sent successfully:', info);
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('❌ Failed to send password reset email:', error);
@@ -374,6 +506,127 @@ const authenticateToken = (req, res, next) => {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running!', timestamp: new Date().toISOString() });
+});
+
+// Email configuration test endpoint
+app.get('/api/test-email-config', async (req, res) => {
+  try {
+    console.log('🧪 Testing email configuration...');
+    
+    // Check environment variables
+    const emailConfig = {
+      hasEmailUser: !!process.env.EMAIL_USER,
+      hasEmailPass: !!process.env.EMAIL_PASS,
+      hasBrevo: !!process.env.BREVO_API_KEY,
+      hasResend: !!process.env.RESEND_API_KEY,
+      hasSendGrid: !!process.env.SENDGRID_API_KEY,
+      hasMailgun: !!process.env.MAILGUN_API_KEY,
+      hasAWS: !!process.env.AWS_ACCESS_KEY_ID,
+      emailUser: process.env.EMAIL_USER ? process.env.EMAIL_USER.substring(0, 3) + '***' : 'Not set',
+      nodeEnv: process.env.NODE_ENV || 'development'
+    };
+    
+    console.log('📧 Email config check:', emailConfig);
+    
+    // Test email transporter connection
+    let connectionTest = { success: false, error: null };
+    
+    try {
+      console.log('🔌 Testing email transporter connection...');
+      await new Promise((resolve, reject) => {
+        emailTransporter.verify((error, success) => {
+          if (error) {
+            console.error('❌ Email transporter verification failed:', error.message);
+            connectionTest = { success: false, error: error.message, code: error.code };
+            reject(error);
+          } else {
+            console.log('✅ Email transporter verification successful');
+            connectionTest = { success: true, error: null };
+            resolve(success);
+          }
+        });
+      });
+    } catch (error) {
+      console.error('❌ Email connection test failed:', error.message);
+      connectionTest = { success: false, error: error.message, code: error.code };
+    }
+    
+    res.json({
+      status: 'Email configuration test completed',
+      timestamp: new Date().toISOString(),
+      config: emailConfig,
+      connectionTest: connectionTest,
+      transporterType: process.env.BREVO_API_KEY ? 'Brevo' :
+                     process.env.RESEND_API_KEY ? 'Resend' :
+                     process.env.SENDGRID_API_KEY ? 'SendGrid' : 
+                     process.env.MAILGUN_API_KEY ? 'Mailgun' : 
+                     process.env.AWS_ACCESS_KEY_ID ? 'AWS SES' : 'Gmail'
+    });
+  } catch (error) {
+    console.error('❌ Email config test error:', error);
+    res.status(500).json({
+      status: 'Email configuration test failed',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Test email sending endpoint (for debugging only)
+app.post('/api/test-send-email', async (req, res) => {
+  try {
+    const { testEmail } = req.body;
+    
+    if (!testEmail) {
+      return res.status(400).json({ error: 'testEmail is required' });
+    }
+    
+    console.log(`🧪 Testing email send to: ${testEmail}`);
+    console.log(`🔧 Using transporter type: ${process.env.BREVO_API_KEY ? 'Brevo' : process.env.RESEND_API_KEY ? 'Resend' : 'Other'}`);
+    
+    const testMailOptions = {
+      from: {
+        name: 'MemeCODE Test',
+        address: process.env.EMAIL_USER || 'test@example.com'
+      },
+      to: testEmail,
+      subject: 'MemeCODE Email Test',
+      html: `
+        <h2>Email Configuration Test</h2>
+        <p>This is a test email to verify your email configuration is working.</p>
+        <p>Timestamp: ${new Date().toISOString()}</p>
+        <p>Server: ${process.env.NODE_ENV || 'development'}</p>
+        <p>Transporter: ${process.env.BREVO_API_KEY ? 'Brevo' : process.env.RESEND_API_KEY ? 'Resend' : 'Other'}</p>
+      `,
+      text: `Email Configuration Test - This is a test email sent at ${new Date().toISOString()}`
+    };
+    
+    console.log('📧 Test email options:', {
+      from: testMailOptions.from,
+      to: testMailOptions.to,
+      subject: testMailOptions.subject
+    });
+    
+    const result = await emailTransporter.sendMail(testMailOptions);
+    console.log('✅ Test email sent successfully:', result);
+    
+    res.json({
+      success: true,
+      message: 'Test email sent successfully',
+      messageId: result.messageId,
+      result: result,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Test email send failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      code: error.code,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Create Razorpay order
@@ -850,7 +1103,9 @@ app.post('/api/forgot-password', async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    // Send password reset email
+    // Send password reset email (without timeout wrapper - let's see the real error)
+    console.log(`📧 Attempting to send password reset email to: ${email}`);
+    
     const emailResult = await sendPasswordResetEmail(user.email, resetToken, user.name);
     
     if (emailResult.success) {
