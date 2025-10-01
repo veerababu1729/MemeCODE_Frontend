@@ -21,8 +21,7 @@ const EbookAccessPage = () => {
       setUserName(decodeURIComponent(nameParam));
       setUserEmail(decodeURIComponent(emailParam));
     } else {
-      // If no user data, redirect to login
-      alert('Please login first');
+      // If no user data, redirect to login silently
       navigate('/login');
     }
   }, []);
@@ -255,7 +254,7 @@ const EbookAccessPage = () => {
       
     } catch (error) {
       console.error('Download failed:', error);
-      alert('Download failed. Please try again or contact support.');
+      // Could add a toast notification here instead of alert
     } finally {
       setIsDownloading(false);
     }

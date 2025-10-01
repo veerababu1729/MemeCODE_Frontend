@@ -52,6 +52,7 @@ const RegistrationPage = () => {
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [userData, setUserData] = useState<{name: string, email: string} | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Get orderId from URL parameters
   useEffect(() => {
@@ -60,9 +61,9 @@ const RegistrationPage = () => {
     if (orderIdParam) {
       setOrderId(orderIdParam);
     } else {
-      // If no orderId, redirect to payment page
-      alert('Please complete payment first');
-      navigate('/payment');
+      // If no orderId, redirect to payment page silently
+      setIsRedirecting(true);
+      setTimeout(() => navigate('/payment'), 100);
     }
   }, []);
 
@@ -217,6 +218,19 @@ const RegistrationPage = () => {
             <div className="mt-4">
               <Loader2 className="w-6 h-6 animate-spin mx-auto text-green-600" />
             </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isRedirecting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md text-center">
+          <CardContent className="pt-6">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+            <p className="text-muted-foreground">Redirecting to payment...</p>
           </CardContent>
         </Card>
       </div>

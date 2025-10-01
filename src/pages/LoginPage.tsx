@@ -86,7 +86,7 @@ const LoginPage = () => {
         }
         // Handle successful login - redirect to ebook access or dashboard
         console.log('Login successful:', result.user);
-        alert('Login successful! Redirecting to your ebook...');
+        // Navigate immediately without alert
         navigate(`/ebook-access?name=${encodeURIComponent(result.user.name)}&email=${encodeURIComponent(result.user.email)}`);
       } else {
         throw new Error(result.error || 'Login failed');

@@ -108,7 +108,7 @@ const PaymentPage = () => {
   const handlePaymentSuccess = (orderId: string) => {
     // Handle successful payment - redirect to registration
     console.log('Payment successful:', orderId);
-    alert('Payment successful! Redirecting to registration...');
+    // Navigate immediately without alert
     navigate(`/registration?orderId=${orderId}`);
   };
 

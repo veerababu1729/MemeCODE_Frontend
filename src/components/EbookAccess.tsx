@@ -242,7 +242,7 @@ const EbookAccess = ({ userName, userEmail, autoScrollToPdf = false }: EbookAcce
       
     } catch (error) {
       console.error('Download failed:', error);
-      alert('Download failed. Please try again or contact support.');
+      // Could add a toast notification here instead of alert
     } finally {
       setIsDownloading(false);
     }
