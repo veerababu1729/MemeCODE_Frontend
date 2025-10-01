@@ -18,7 +18,9 @@ const corsOptions = {
     ? [
         process.env.FRONTEND_URL,
         'https://memecodefrontend112.vercel.app',
-        'https://skyblue-python-launch.vercel.app'
+        'https://skyblue-python-launch.vercel.app',
+        'https://www.memecode.in',
+        'https://memecode.in'
       ]
     : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:8080'],
   credentials: true,

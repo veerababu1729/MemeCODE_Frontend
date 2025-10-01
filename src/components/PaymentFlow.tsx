@@ -40,29 +40,29 @@ const PaymentFlow = ({ onComplete }: PaymentFlowProps) => {
     }
   };
 
-  if (currentStep === 'payment') {
-    return <PaymentForm onPaymentSuccess={handlePaymentSuccess} />;
-  }
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center pt-4 animate-in fade-in duration-300">
+      <div className="w-full max-w-4xl mx-4 animate-in slide-in-from-top-4 duration-500">
+        {currentStep === 'payment' && (
+          <PaymentForm onPaymentSuccess={handlePaymentSuccess} />
+        )}
 
-  if (currentStep === 'form') {
-    return (
-      <UserDetailsForm 
-        orderId={orderId} 
-        onSubmitSuccess={handleFormSubmitSuccess} 
-      />
-    );
-  }
+        {currentStep === 'form' && (
+          <UserDetailsForm 
+            orderId={orderId} 
+            onSubmitSuccess={handleFormSubmitSuccess} 
+          />
+        )}
 
-  if (currentStep === 'success' && userData) {
-    return (
-      <EbookAccess 
-        userName={userData.name}
-        userEmail={userData.email}
-      />
-    );
-  }
-
-  return null;
+        {currentStep === 'success' && userData && (
+          <EbookAccess 
+            userName={userData.name}
+            userEmail={userData.email}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default PaymentFlow;
