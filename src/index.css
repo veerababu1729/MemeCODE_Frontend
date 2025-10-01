@@ -873,6 +873,22 @@ All colors MUST be HSL.
     border-radius: 1rem;
     padding: 1.5rem;
     animation: coverpage-glow 6s ease-in-out infinite;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .coverpage-container {
+      padding: 2rem;
+      max-width: 500px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .coverpage-container {
+      padding: 2.5rem;
+      max-width: 600px;
+    }
   }
 
   .coverpage-container::before {

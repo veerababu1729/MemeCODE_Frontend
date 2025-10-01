@@ -52,9 +52,9 @@ const PaymentSection = () => {
 
   return (
     <section id="payment" className="py-20 px-4 bg-gradient-to-br from-primary/5 to-accent/5">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
         {/* Single boxed card containing the whole payment section */}
-        <Card className="glass-card p-8 md:p-10 shadow-floating hover:shadow-glow transition-all duration-300">
+        <Card className="glass-card p-6 md:p-10 lg:p-14 xl:p-16 shadow-floating hover:shadow-glow transition-all duration-300">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-accent/20 text-accent-foreground text-sm font-medium mb-4">
               <span>Limited Time Offer</span>
@@ -91,7 +91,7 @@ const PaymentSection = () => {
                 <img 
                   src={coverImage} 
                   alt="Python in 21 Days Ebook Cover" 
-                  className="w-48 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative z-10"
+                  className="w-48 md:w-56 lg:w-64 xl:w-72 h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative z-10"
                 />
               </div>
               {/* Optional glow effect */}
@@ -102,7 +102,7 @@ const PaymentSection = () => {
           {/* Ultra-Enhanced Payment Button with maximum sparkle effects */}
           <Button 
             onClick={handlePaymentClick}
-            className="w-full text-lg sm:text-xl md:text-2xl py-6 sm:py-7 md:py-8 px-6 sm:px-8 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40 animate-pulse hover:animate-none"
+            className="w-full text-lg sm:text-xl md:text-2xl py-6 sm:py-7 md:py-8 px-6 sm:px-8 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-black font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40 animate-pulse hover:animate-none"
           >
             {/* Continuous sparkle background */}
             <div className="absolute inset-0 opacity-40">

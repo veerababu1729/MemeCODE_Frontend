@@ -194,7 +194,10 @@ const HomePage = () => {
                   top: '60%',
                   transform: 'translateY(-50%)'
                 }}
-                onClick={() => document.querySelector('#reviews')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  const pythonSection = document.querySelector('section.py-16.md\\:py-20.lg\\:py-24');
+                  pythonSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
               >
                 Start with 99
               </Button>
@@ -204,7 +207,7 @@ const HomePage = () => {
       </section>
 
       {/* Python Illustration Section */}
-      <section className="py-16 px-4 bg-gradient-to-br from-muted/30 to-background">
+      <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
         <div className="max-w-6xl mx-auto flex justify-center">
           <div 
             ref={imageRef}
@@ -215,7 +218,7 @@ const HomePage = () => {
               <img 
                 src={pythonIllustration} 
                 alt="Python Learning Illustration"
-                className="rounded-xl shadow-floating max-w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
+                className="rounded-xl shadow-floating w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
               />
             </div>
           </div>
