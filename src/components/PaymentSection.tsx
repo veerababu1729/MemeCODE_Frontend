@@ -4,11 +4,13 @@ import { Card } from '@/components/ui/card';
 import CountdownTimer from './CountdownTimer';
 import PurchaseCounter from './PurchaseCounter';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PaymentFlow from './PaymentFlow';
 import AuthenticationFlow from './AuthenticationFlow';
 import coverImage from '@/assets/coverpage.png';
 
 const PaymentSection = () => {
+  const navigate = useNavigate();
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [showLoginFlow, setShowLoginFlow] = useState(false);
   
@@ -31,7 +33,8 @@ const PaymentSection = () => {
   ];
 
   const handlePaymentClick = () => {
-    setShowPaymentFlow(true);
+    // Navigate directly to payment page
+    navigate('/payment');
   };
 
   const handlePaymentComplete = () => {
@@ -155,7 +158,7 @@ const PaymentSection = () => {
               Already purchased? 
               <button 
                 className="text-blue-600 hover:text-blue-800 underline ml-1 font-medium transition-colors"
-                onClick={() => setShowLoginFlow(true)}
+                onClick={() => navigate('/login')}
               >
                 Login here
               </button>
