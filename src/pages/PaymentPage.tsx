@@ -210,18 +210,8 @@ const PaymentPage = () => {
             Complete Your Purchase
           </CardTitle>
           <CardDescription className="text-sm sm:text-base">
-            Get access to premium coding Ebook for {currentPriceDisplay}
+            Get access to premium coding Ebook
           </CardDescription>
-          <div className="text-center mt-2">
-            <Button
-              type="button"
-              variant="link"
-              className="text-xs text-muted-foreground hover:text-primary"
-              onClick={() => navigate('/')}
-            >
-              ← Back to Home
-            </Button>
-          </div>
         </CardHeader>
         
         <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
