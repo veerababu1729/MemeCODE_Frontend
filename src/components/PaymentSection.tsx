@@ -5,13 +5,11 @@ import CountdownTimer from './CountdownTimer';
 import PurchaseCounter from './PurchaseCounter';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PaymentFlow from './PaymentFlow';
 import AuthenticationFlow from './AuthenticationFlow';
 import coverImage from '@/assets/coverpage.png';
 
 const PaymentSection = () => {
   const navigate = useNavigate();
-  const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [showLoginFlow, setShowLoginFlow] = useState(false);
   
   // Check URL parameters to auto-show login
@@ -37,17 +35,9 @@ const PaymentSection = () => {
     navigate('/payment');
   };
 
-  const handlePaymentComplete = () => {
-    setShowPaymentFlow(false);
-  };
-
   const handleLoginComplete = () => {
     setShowLoginFlow(false);
   };
-
-  if (showPaymentFlow) {
-    return <PaymentFlow onComplete={handlePaymentComplete} />;
-  }
 
   if (showLoginFlow) {
     return <AuthenticationFlow onComplete={handleLoginComplete} />;

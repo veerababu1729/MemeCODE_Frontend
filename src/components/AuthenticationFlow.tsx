@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import LoginForm from './LoginForm';
-import PaymentFlow from './PaymentFlow';
-import EbookAccess from './EbookAccess';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, ShoppingCart } from 'lucide-react';
@@ -18,6 +17,7 @@ interface UserData {
 }
 
 const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'login' | 'register' | 'success' | 'purchase-prompt' | 'ebook-access'>('login');
   const [userData, setUserData] = useState<UserData | null>(null);
 
@@ -25,8 +25,8 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
     setUserData(user);
     
     if (user.hasPurchased) {
-      // User has already purchased, go directly to ebook content
-      setCurrentView('ebook-access');
+      // User has already purchased, navigate to ebook access page
+      navigate(`/ebook-access?name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`);
     } else {
       // User exists but hasn't purchased, show purchase prompt
       setCurrentView('purchase-prompt');
@@ -41,14 +41,6 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
     setCurrentView('login');
   };
 
-  const handlePaymentComplete = (userData?: UserData) => {
-    if (userData) {
-      setUserData(userData);
-      setCurrentView('ebook-access');
-    } else {
-      onComplete();
-    }
-  };
 
   if (currentView === 'login') {
     return (
@@ -71,7 +63,12 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
             ← Already have an account? Login
           </button>
         </div>
-        <PaymentFlow onComplete={handlePaymentComplete} />
+        <Button 
+          onClick={() => navigate('/payment')}
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg font-semibold"
+        >
+          Continue to Payment
+        </Button>
       </div>
     );
   }
@@ -154,12 +151,9 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
   }
 
   if (currentView === 'ebook-access' && userData) {
-    return (
-      <EbookAccess 
-        userName={userData.name}
-        userEmail={userData.email}
-      />
-    );
+    // Navigate to ebook access page instead of using component
+    navigate(`/ebook-access?name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`);
+    return null;
   }
 
   return null;
