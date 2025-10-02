@@ -208,7 +208,7 @@ const HomePage = () => {
 
       {/* Python Illustration Section */}
       <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
-        <div className="max-w-6xl mx-auto flex justify-center">
+        <div className="max-w-2xl md:max-w-xl lg:max-w-lg xl:max-w-md mx-auto flex justify-center">
           <div 
             ref={imageRef}
             className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`} 

@@ -55,9 +55,9 @@ const PaymentSection = () => {
 
   return (
     <section id="payment" className="py-20 px-4 bg-gradient-to-br from-primary/5 to-accent/5">
-      <div className="max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+      <div className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
         {/* Single boxed card containing the whole payment section */}
-        <Card className="glass-card p-6 md:p-10 lg:p-14 xl:p-16 shadow-floating hover:shadow-glow transition-all duration-300">
+        <Card className="glass-card p-4 md:p-6 lg:p-8 xl:p-10 shadow-floating hover:shadow-glow transition-all duration-300">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-accent/20 text-accent-foreground text-sm font-medium mb-4">
               <span>Limited Time Offer</span>
