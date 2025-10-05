@@ -9,12 +9,17 @@ const FAQSection = () => {
   const faqs = [
     {
       id: 1,
+      question: "Whom is this ebook for?",
+      answer: "Specifically for college placements, or high package job switch",
+    },
+    {
+      id: 2,
       question: "Why Python? Why not C++, Java?",
       answer: "AI is everywhere; it's built with Python.",
       image: faq1Image,
     },
     {
-      id: 2,
+      id: 3,
       question: "Do I get free certificate?",
       answer: "Yes, you will receive on your mail",
     }
