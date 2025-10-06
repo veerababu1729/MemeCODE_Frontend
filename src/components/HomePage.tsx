@@ -194,10 +194,7 @@ const HomePage = () => {
                   top: '60%',
                   transform: 'translateY(-50%)'
                 }}
-                onClick={() => {
-                  const pythonSection = document.querySelector('section.py-16.md\\:py-20.lg\\:py-24');
-                  pythonSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }}
+                onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Start with 99
               </Button>
@@ -205,6 +202,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Payment Section */}
+      <PaymentSection />
 
       {/* Python Illustration Section */}
       <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
@@ -224,9 +224,6 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
-      {/* Payment Section */}
-      <PaymentSection />
 
       {/* Reviews Section */}
       <ReviewsSection />
