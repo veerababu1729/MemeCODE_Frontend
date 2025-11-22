@@ -73,9 +73,9 @@ const PaymentPage = () => {
   
   // Price calculation
   const originalPrice = 199900; // ₹1999 in paise
-  const discountedPrice = 9900; // ₹99 in paise
+  const discountedPrice = 19900; // ₹199 in paise
   const currentPrice = couponApplied ? discountedPrice : originalPrice;
-  const currentPriceDisplay = couponApplied ? '₹99' : '₹1999';
+  const currentPriceDisplay = couponApplied ? '₹199' : '₹1999';
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -247,7 +247,7 @@ const PaymentPage = () => {
               </div>
               {couponApplied && (
                 <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                  95% OFF
+                  90% OFF
                 </div>
               )}
             </div>
@@ -262,7 +262,7 @@ const PaymentPage = () => {
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-green-600" />
                   <span className="text-sm font-medium text-green-800">BTECH applied</span>
-                  <span className="text-xs text-green-600">₹1900 saved!</span>
+                  <span className="text-xs text-green-600">₹1800 saved!</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -281,7 +281,7 @@ const PaymentPage = () => {
                 <div className="text-center">
                   <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-3 mb-2 shadow-lg">
                     <p className="text-sm font-bold text-yellow-800 animate-bounce">
-                      🎉 Apply coupon code "BTECH" to get at ₹99 🎉
+                      🎉 Apply coupon code "BTECH" to get at ₹199 🎉
                     </p>
                     
                   </div>

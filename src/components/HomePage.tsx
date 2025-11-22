@@ -186,7 +186,7 @@ const HomePage = () => {
                 Struggle?
               </Button>
               
-              {/* Right Hand Button - "Start with 99" */}
+              {/* Right Hand Button - "Start with 199" */}
               <Button 
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
                 style={{ 
@@ -196,7 +196,7 @@ const HomePage = () => {
                 }}
                 onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Start with 99
+                Start with 199
               </Button>
             </div>
           </div>
@@ -258,7 +258,7 @@ const HomePage = () => {
               className="hero-button text-lg px-8 py-4"
               onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Start Learning Today - ₹99
+              Start Learning Today - ₹199
             </Button>
           </div>
         </div>
@@ -289,7 +289,7 @@ const HomePage = () => {
                 Struggle?
               </Button>
               
-              {/* Right Hand Button - "Start with 99" */}
+              {/* Right Hand Button - "Start with 199" */}
               <Button 
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
                 style={{ 
@@ -299,7 +299,7 @@ const HomePage = () => {
                 }}
                 onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Start with 99
+                Start with 199
               </Button>
             </div>
           </div>
