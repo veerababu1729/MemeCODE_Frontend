@@ -217,7 +217,7 @@ const PaymentPage = () => {
             <img
               src={ebookCover}
               alt="MemeCode Ebook Cover"
-              className="rounded-xl shadow-floating w-full max-w-[270px] sm:max-w-[270px] h-auto"
+              className="rounded-xl shadow-floating w-full max-w-[250px] sm:max-w-[250px] h-auto"
             />
           </div>
 
