@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CreditCard, Shield, CheckCircle, Clock, Tag, X } from 'lucide-react';
 import { API_ENDPOINTS } from '@/config/api';
+import ebookCover from '@/assets/coverpage.png';
 
 declare global {
   interface Window {
@@ -209,49 +210,15 @@ const PaymentPage = () => {
           <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
             Complete Your Purchase
           </CardTitle>
-          <CardDescription className="text-sm sm:text-base">
-            Get access to premium coding Ebook
-          </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
-          {/* Course Details */}
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 p-3 sm:p-4 rounded-lg border">
-            <h3 className="font-semibold text-base sm:text-lg mb-2">MemeCode EBook</h3>
-            <div className="space-y-2 text-xs sm:text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
-                <span>Learn Coding(in python) with memes</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
-                <span>300+ projects for your resume</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
-                <span>Just 150-200 DSA Problems for coding interviews.</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Price Section */}
-          <div className="text-center space-y-2">
-            <div className="flex items-center justify-center gap-2 flex-wrap">
-              {couponApplied && (
-                <div className="text-lg sm:text-xl font-medium text-muted-foreground line-through">
-                  ₹1999
-                </div>
-              )}
-              <div className="text-2xl sm:text-3xl font-bold text-primary">
-                {currentPriceDisplay}
-              </div>
-              {couponApplied && (
-                <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                  90% OFF
-                </div>
-              )}
-            </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">One-time payment</div>
+          <div className="flex justify-center">
+            <img
+              src={ebookCover}
+              alt="MemeCode Ebook Cover"
+              className="rounded-xl shadow-floating w-full max-w-[270px] sm:max-w-[270px] h-auto"
+            />
           </div>
 
           {/* Coupon Section */}

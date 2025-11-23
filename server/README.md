@@ -20,7 +20,7 @@ A production-ready Node.js backend API for the MemeCODE Python Launch applicatio
 - **Database**: PostgreSQL (production) / SQLite (development)
 - **Authentication**: JWT + bcrypt
 - **Payment**: Razorpay
-- **Email**: Nodemailer with multi-provider support
+- **Email**: Brevo
 - **Deployment**: Render with Docker support
 
 ## 📁 Project Structure

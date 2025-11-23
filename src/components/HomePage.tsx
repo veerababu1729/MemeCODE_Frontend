@@ -6,6 +6,7 @@ import FAQSection from './FAQSection';
 import { useState, useEffect, useRef } from 'react';
 import matrixImage from '@/assets/matrix.png';
 import pythonIllustration from '@/assets/coverpage.png';
+import demoVideo from '@/assets/demovideo.mp4';
 
 // Matrix Digital Rain Component
 const MatrixRain = () => {
@@ -90,6 +91,49 @@ const MatrixOrbs = () => {
           }}
         />
       ))}
+    </div>
+  );
+};
+
+// Single demo video component (one video instance, reused across layouts)
+const DemoVideo = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const handlePlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  return (
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-xs sm:max-w-sm">
+        <div className="relative rounded-xl overflow-hidden shadow-floating hover:shadow-glow transition-all duration-500 aspect-[9/16] bg-black">
+          <video
+            ref={videoRef}
+            onPlay={() => setIsPlaying(true)}
+            controls
+            className="w-full h-full object-contain"
+            poster="/api/placeholder/270/480"
+          >
+            <source src={demoVideo} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          {!isPlaying && (
+            <button
+              type="button"
+              onClick={handlePlay}
+              className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+            >
+              <span className="px-4 py-2 rounded-full bg-sky-500 hover:bg-sky-600 text-white text-sm sm:text-base font-semibold shadow-lg ring-2 ring-sky-200">
+                Play video
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
@@ -206,20 +250,28 @@ const HomePage = () => {
       {/* Payment Section */}
       <PaymentSection />
 
-      {/* Python Illustration Section */}
+      {/* Demo Video and Python Illustration Section - Responsive Layout */}
       <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
-        <div className="max-w-2xl md:max-w-xl lg:max-w-lg xl:max-w-md mx-auto flex justify-center">
-          <div 
-            ref={imageRef}
-            className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`} 
-            style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
-          >
-            <div className="coverpage-container">
-              <img 
-                src={pythonIllustration} 
-                alt="Python Learning Illustration"
-                className="rounded-xl shadow-floating w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
-              />
+        <div className="max-w-7xl mx-auto grid gap-12 lg:grid-cols-2 items-center">
+          {/* Demo Video - appears above illustration on mobile, side-by-side on desktop */}
+          <div className="order-1">
+            <DemoVideo />
+          </div>
+
+          {/* Python Illustration */}
+          <div className="order-2">
+            <div 
+              ref={imageRef}
+              className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`} 
+              style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
+            >
+              <div className="coverpage-container max-w-md lg:max-w-lg mx-auto">
+                <img 
+                  src={pythonIllustration} 
+                  alt="Python Learning Illustration"
+                  className="rounded-xl shadow-floating w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
+                />
+              </div>
             </div>
           </div>
         </div>

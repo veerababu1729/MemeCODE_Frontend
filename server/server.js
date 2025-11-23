@@ -73,19 +73,22 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Initialize PostgreSQL Database with connection pooling optimized for 300-500 concurrent users
+// Initialize PostgreSQL Database with connection pooling optimized for Render + Supabase
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-  max: 30, // Increased for higher concurrency
-  min: 5, // Minimum connections to maintain
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000, // Increased timeout
-  acquireTimeoutMillis: 60000, // Time to wait for connection
-  createTimeoutMillis: 30000,
+  max: 10, // Reduced for Render free tier + Supabase limits
+  min: 2, // Minimum connections to maintain
+  idleTimeoutMillis: 20000, // Shorter idle timeout for free tier
+  connectionTimeoutMillis: 35000, // Longer timeout for Render->Supabase
+  acquireTimeoutMillis: 40000, // Reduced wait time
+  createTimeoutMillis: 35000,
   destroyTimeoutMillis: 5000,
   reapIntervalMillis: 1000,
-  createRetryIntervalMillis: 200,
+  createRetryIntervalMillis: 500, // Slower retry for stability
+  // Add keepalive for long-running connections
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10000,
 });
 
 // Create tables if they don't exist
@@ -633,7 +636,7 @@ app.post('/api/test-send-email', async (req, res) => {
 
 // Create Razorpay order
 app.post('/api/create-order', async (req, res) => {
-  const client = await pool.connect();
+  let client;
   try {
     console.log('💳 Create order request received:', req.body);
     
@@ -659,12 +662,47 @@ app.post('/api/create-order', async (req, res) => {
     const order = await razorpay.orders.create(options);
     console.log('✅ Razorpay order created successfully:', order.id);
     
-    // Store order in database
-    await client.query(
-      'INSERT INTO payments (razorpay_order_id, amount, currency, status, created_at) VALUES ($1, $2, $3, $4, $5)',
-      [order.id, order.amount, order.currency, 'created', new Date()]
-    );
-    console.log('💾 Order stored in database:', order.id);
+    // Store order in database with retry logic
+    let dbStored = false;
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    while (!dbStored && retryCount < maxRetries) {
+      try {
+        console.log(`🔌 Attempting database connection (attempt ${retryCount + 1}/${maxRetries})`);
+        client = await pool.connect();
+        
+        await client.query(
+          'INSERT INTO payments (razorpay_order_id, amount, currency, status, created_at) VALUES ($1, $2, $3, $4, $5)',
+          [order.id, order.amount, order.currency, 'created', new Date()]
+        );
+        
+        console.log('💾 Order stored in database:', order.id);
+        dbStored = true;
+        
+      } catch (dbError) {
+        console.error(`❌ Database error (attempt ${retryCount + 1}):`, dbError.message);
+        
+        if (client) {
+          client.release();
+          client = null;
+        }
+        
+        retryCount++;
+        
+        if (retryCount < maxRetries) {
+          console.log(`⏳ Retrying in 1 second...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+    }
+    
+    if (!dbStored) {
+      console.error('❌ Failed to store order in database after all retries');
+      // Still return success since Razorpay order was created
+      // The order can be manually reconciled later
+      console.log('⚠️ Returning success despite DB failure - order can be reconciled');
+    }
     
     const response = {
       orderId: order.id,
@@ -675,6 +713,7 @@ app.post('/api/create-order', async (req, res) => {
     
     console.log('📤 Sending response:', response);
     res.json(response);
+    
   } catch (error) {
     console.error('❌ Error creating Razorpay order:', error);
     console.error('Error details:', error.message);
@@ -683,13 +722,15 @@ app.post('/api/create-order', async (req, res) => {
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 });
 
 // Verify payment
 app.post('/api/verify-payment', async (req, res) => {
-  const client = await pool.connect();
+  let client;
   try {
     console.log('🔍 Payment verification request received:', req.body);
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -705,23 +746,57 @@ app.post('/api/verify-payment', async (req, res) => {
     console.log('🔐 Signature verification:', isAuthentic ? '✅ Valid' : '❌ Invalid');
 
     if (isAuthentic) {
-      // Update payment status in database
-      const updateResult = await client.query(
-        'UPDATE payments SET razorpay_payment_id = $1, razorpay_signature = $2, status = $3, updated_at = CURRENT_TIMESTAMP WHERE razorpay_order_id = $4 RETURNING id',
-        [razorpay_payment_id, razorpay_signature, 'completed', razorpay_order_id]
-      );
+      // Update payment status in database with retry logic
+      let dbUpdated = false;
+      let retryCount = 0;
+      const maxRetries = 3;
       
-      if (updateResult.rows.length > 0) {
-        console.log('✅ Payment verified and updated in database:', razorpay_order_id);
-        res.json({ 
-          success: true, 
-          message: 'Payment verified successfully',
-          orderId: razorpay_order_id 
-        });
-      } else {
-        console.log('❌ Payment order not found in database:', razorpay_order_id);
-        res.status(404).json({ success: false, message: 'Payment order not found' });
+      while (!dbUpdated && retryCount < maxRetries) {
+        try {
+          console.log(`🔌 Attempting database connection for verification (attempt ${retryCount + 1}/${maxRetries})`);
+          client = await pool.connect();
+          
+          const updateResult = await client.query(
+            'UPDATE payments SET razorpay_payment_id = $1, razorpay_signature = $2, status = $3, updated_at = CURRENT_TIMESTAMP WHERE razorpay_order_id = $4 RETURNING id',
+            [razorpay_payment_id, razorpay_signature, 'completed', razorpay_order_id]
+          );
+          
+          if (updateResult.rows.length > 0) {
+            console.log('✅ Payment verified and updated in database:', razorpay_order_id);
+            dbUpdated = true;
+            
+            res.json({ 
+              success: true, 
+              message: 'Payment verified successfully',
+              orderId: razorpay_order_id 
+            });
+          } else {
+            console.log('❌ Payment order not found in database:', razorpay_order_id);
+            return res.status(404).json({ success: false, message: 'Payment order not found' });
+          }
+          
+        } catch (dbError) {
+          console.error(`❌ Database error during verification (attempt ${retryCount + 1}):`, dbError.message);
+          
+          if (client) {
+            client.release();
+            client = null;
+          }
+          
+          retryCount++;
+          
+          if (retryCount < maxRetries) {
+            console.log(`⏳ Retrying verification in 1 second...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
       }
+      
+      if (!dbUpdated) {
+        console.error('❌ Failed to update payment verification in database after all retries');
+        res.status(500).json({ success: false, message: 'Database connection failed during verification' });
+      }
+      
     } else {
       console.log('❌ Invalid payment signature for order:', razorpay_order_id);
       res.status(400).json({ success: false, message: 'Invalid signature' });
@@ -730,7 +805,9 @@ app.post('/api/verify-payment', async (req, res) => {
     console.error('❌ Error verifying payment:', error);
     res.status(500).json({ error: 'Payment verification failed' });
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 });
 
