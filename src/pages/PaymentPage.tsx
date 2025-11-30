@@ -16,14 +16,14 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Timer state (5 minutes = 300 seconds)
   const getStoredTimer = () => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('paymentTimerRemaining');
       const storedTime = stored ? parseInt(stored, 10) : null;
       const lastUpdate = localStorage.getItem('paymentTimerLastUpdate');
-      
+
       if (storedTime && lastUpdate) {
         const elapsed = Math.floor((Date.now() - parseInt(lastUpdate, 10)) / 1000);
         const remaining = Math.max(0, storedTime - elapsed);
@@ -40,18 +40,18 @@ const PaymentPage = () => {
     const timerInterval = setInterval(() => {
       setTimeRemaining(prevTime => {
         const newTime = Math.max(0, prevTime - 1);
-        
+
         // Save to localStorage
         if (typeof window !== 'undefined') {
           localStorage.setItem('paymentTimerRemaining', newTime.toString());
           localStorage.setItem('paymentTimerLastUpdate', Date.now().toString());
         }
-        
+
         // Reset timer when it reaches 0
         if (newTime === 0) {
           return 300; // Reset to 5 minutes
         }
-        
+
         return newTime;
       });
     }, 1000);
@@ -71,12 +71,13 @@ const PaymentPage = () => {
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
   const [showCouponInput, setShowCouponInput] = useState(false);
-  
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [validCouponCode, setValidCouponCode] = useState('');
+
   // Price calculation
   const originalPrice = 199900; // ₹1999 in paise
-  const discountedPrice = 19900; // ₹199 in paise
-  const currentPrice = couponApplied ? discountedPrice : originalPrice;
-  const currentPriceDisplay = couponApplied ? '₹199' : '₹1999';
+  const currentPrice = couponApplied ? Math.max(0, originalPrice - discountAmount) : originalPrice;
+  const currentPriceDisplay = `₹${Math.round(currentPrice / 100)}`;
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -88,21 +89,50 @@ const PaymentPage = () => {
     });
   };
 
-  const handleCouponApply = () => {
+  const handleCouponApply = async () => {
     setCouponError('');
-    
-    if (couponCode.trim().toLowerCase() === 'btech') {
-      setCouponApplied(true);
-      setShowCouponInput(false);
-      setCouponCode('');
-    } else {
-      setCouponError('Invalid coupon code');
+    if (!couponCode.trim()) return;
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(API_ENDPOINTS.VALIDATE_COUPON, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode }),
+      });
+
+      const data = await response.json();
+
+      if (data.valid) {
+        setCouponApplied(true);
+        setValidCouponCode(data.code);
+        setShowCouponInput(false);
+
+        let discount = 0;
+        if (data.discountType === 'fixed') {
+          discount = data.discountValue;
+        } else {
+          discount = Math.floor((originalPrice * data.discountValue) / 100);
+        }
+        setDiscountAmount(discount);
+        setCouponCode('');
+      } else {
+        setCouponError(data.message || 'Invalid coupon code');
+      }
+    } catch (err) {
+      console.error('Coupon validation error:', err);
+      setCouponError('Error validating coupon');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCouponRemove = () => {
     setCouponApplied(false);
     setCouponCode('');
+    setValidCouponCode('');
+    setDiscountAmount(0);
     setCouponError('');
   };
 
@@ -130,7 +160,10 @@ const PaymentPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount: currentPrice }),
+        body: JSON.stringify({
+          amount: originalPrice,
+          couponCode: couponApplied ? validCouponCode : undefined
+        }),
       });
 
       if (!response.ok) {
@@ -167,7 +200,7 @@ const PaymentPage = () => {
             }
 
             const verifyData = await verifyResponse.json();
-            
+
             if (verifyData.success) {
               handlePaymentSuccess(response.razorpay_order_id);
             } else {
@@ -211,7 +244,7 @@ const PaymentPage = () => {
             Complete Your Purchase
           </CardTitle>
         </CardHeader>
-        
+
         <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
           <div className="flex justify-center">
             <img
@@ -228,8 +261,8 @@ const PaymentPage = () => {
               <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-800">BTECH applied</span>
-                  <span className="text-xs text-green-600">₹1800 saved!</span>
+                  <span className="text-sm font-medium text-green-800">{validCouponCode} applied</span>
+                  <span className="text-xs text-green-600">₹{Math.round(discountAmount / 100)} saved!</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -250,7 +283,7 @@ const PaymentPage = () => {
                     <p className="text-sm font-bold text-yellow-800 animate-bounce">
                       🎉 Apply coupon code "BTECH" to get at ₹199 🎉
                     </p>
-                    
+
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -312,10 +345,9 @@ const PaymentPage = () => {
               <Clock className={`w-3 h-3 sm:w-4 sm:h-4 ${timeRemaining <= 60 ? 'text-red-600 animate-pulse' : 'text-orange-600'}`} />
               <div className="flex items-center gap-1 sm:gap-2">
                 <span className="text-xs sm:text-sm text-orange-600 font-medium">Time remaining</span>
-                <span 
-                  className={`font-bold text-sm sm:text-lg ${
-                    timeRemaining <= 60 ? 'text-red-700 animate-pulse' : 'text-orange-700'
-                  }`}
+                <span
+                  className={`font-bold text-sm sm:text-lg ${timeRemaining <= 60 ? 'text-red-700 animate-pulse' : 'text-orange-700'
+                    }`}
                 >
                   {formatTimer(timeRemaining)}
                 </span>

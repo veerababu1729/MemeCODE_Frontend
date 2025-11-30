@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
   FORGOT_PASSWORD: `${API_BASE_URL}/api/forgot-password`,
   RESET_PASSWORD: `${API_BASE_URL}/api/reset-password`,
   HEALTH_CHECK: `${API_BASE_URL}/api/health`,
+  VALIDATE_COUPON: `${API_BASE_URL}/api/validate-coupon`,
 };
 
 export default API_BASE_URL;

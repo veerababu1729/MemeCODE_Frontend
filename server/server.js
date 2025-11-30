@@ -187,6 +187,43 @@ const initializeDatabase = async () => {
       CREATE INDEX IF NOT EXISTS idx_user_details_email ON user_details(email);
     `);
 
+    // Coupons table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS coupons (
+        id SERIAL PRIMARY KEY,
+        code VARCHAR(50) UNIQUE NOT NULL,
+        influencer_name VARCHAR(255),
+        discount_type VARCHAR(20) DEFAULT 'percent', -- 'percent' or 'fixed'
+        discount_value INTEGER NOT NULL,
+        is_active BOOLEAN DEFAULT TRUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Add coupon columns to payments if they don't exist
+    const paymentsColumns = await client.query(`
+      SELECT column_name FROM information_schema.columns 
+      WHERE table_name = 'payments'
+    `);
+    const existingPaymentColumns = paymentsColumns.rows.map(row => row.column_name);
+    
+    if (!existingPaymentColumns.includes('coupon_code')) {
+      console.log('➕ Adding coupon_code column to payments...');
+      await client.query('ALTER TABLE payments ADD COLUMN coupon_code VARCHAR(50)');
+    }
+    
+    if (!existingPaymentColumns.includes('original_amount')) {
+      console.log('➕ Adding original_amount column to payments...');
+      await client.query('ALTER TABLE payments ADD COLUMN original_amount INTEGER');
+    }
+
+    // Seed default coupon BTECH
+    await client.query(`
+      INSERT INTO coupons (code, influencer_name, discount_type, discount_value)
+      VALUES ('BTECH', 'Default', 'fixed', 180000)
+      ON CONFLICT (code) DO NOTHING
+    `);
+
     client.release();
     console.log('✅ Database schema updated successfully');
     console.log('🔧 Development mode: Payment verification is relaxed for testing');
@@ -634,13 +671,49 @@ app.post('/api/test-send-email', async (req, res) => {
   }
 });
 
+// Validate Coupon Endpoint
+app.post('/api/validate-coupon', async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const { code } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({ valid: false, message: 'Coupon code is required' });
+    }
+
+    const result = await client.query(
+      'SELECT * FROM coupons WHERE code = $1 AND is_active = TRUE',
+      [code.toUpperCase()]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ valid: false, message: 'Invalid coupon code' });
+    }
+
+    const coupon = result.rows[0];
+    
+    res.json({
+      valid: true,
+      code: coupon.code,
+      discountType: coupon.discount_type,
+      discountValue: coupon.discount_value,
+      message: 'Coupon applied successfully'
+    });
+  } catch (error) {
+    console.error('Error validating coupon:', error);
+    res.status(500).json({ valid: false, message: 'Error validating coupon' });
+  } finally {
+    client.release();
+  }
+});
+
 // Create Razorpay order
 app.post('/api/create-order', async (req, res) => {
   let client;
   try {
     console.log('💳 Create order request received:', req.body);
     
-    const { amount, currency = 'INR' } = req.body;
+    const { amount, currency = 'INR', couponCode } = req.body;
     
     if (!amount) {
       console.log('❌ Amount missing in request');
@@ -652,8 +725,36 @@ app.post('/api/create-order', async (req, res) => {
       return res.status(500).json({ error: 'Payment service not configured' });
     }
 
+    // Calculate final amount if coupon is present
+    let finalAmount = amount;
+    let originalAmount = amount;
+    let appliedCoupon = null;
+
+    if (couponCode) {
+      client = await pool.connect();
+      const couponResult = await client.query(
+        'SELECT * FROM coupons WHERE code = $1 AND is_active = TRUE',
+        [couponCode.toUpperCase()]
+      );
+      
+      if (couponResult.rows.length > 0) {
+        const coupon = couponResult.rows[0];
+        appliedCoupon = coupon.code;
+        
+        if (coupon.discount_type === 'percent') {
+          const discount = Math.floor((amount * coupon.discount_value) / 100);
+          finalAmount = amount - discount;
+        } else if (coupon.discount_type === 'fixed') {
+          finalAmount = Math.max(0, amount - coupon.discount_value);
+        }
+        console.log(`🎟️ Coupon ${coupon.code} applied. Original: ${amount}, Final: ${finalAmount}`);
+      }
+      client.release();
+      client = null; // Reset client for later use
+    }
+
     const options = {
-      amount: amount, // amount in paise
+      amount: finalAmount, // amount in paise
       currency: currency,
       receipt: `receipt_${Date.now()}`,
     };
@@ -673,8 +774,8 @@ app.post('/api/create-order', async (req, res) => {
         client = await pool.connect();
         
         await client.query(
-          'INSERT INTO payments (razorpay_order_id, amount, currency, status, created_at) VALUES ($1, $2, $3, $4, $5)',
-          [order.id, order.amount, order.currency, 'created', new Date()]
+          'INSERT INTO payments (razorpay_order_id, amount, original_amount, currency, status, coupon_code, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+          [order.id, finalAmount, originalAmount, order.currency, 'created', appliedCoupon, new Date()]
         );
         
         console.log('💾 Order stored in database:', order.id);
