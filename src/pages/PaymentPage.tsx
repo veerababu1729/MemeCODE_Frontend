@@ -281,7 +281,7 @@ const PaymentPage = () => {
                 <div className="text-center">
                   <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-3 mb-2 shadow-lg">
                     <p className="text-sm font-bold text-yellow-800 animate-bounce">
-                      🎉 Any Coupon Code? 🎉
+                      🎉 Apply coupon code to get at ₹199 🎉
                     </p>
 
                   </div>
