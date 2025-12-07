@@ -23,7 +23,7 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
 
   const handleLoginSuccess = (user: UserData) => {
     setUserData(user);
-    
+
     if (user.hasPurchased) {
       // User has already purchased, navigate to ebook access page
       navigate(`/ebook-access?name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`);
@@ -44,7 +44,7 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
 
   if (currentView === 'login') {
     return (
-      <LoginForm 
+      <LoginForm
         onLoginSuccess={handleLoginSuccess}
         onSwitchToRegister={handleSwitchToRegister}
       />
@@ -63,7 +63,7 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
             ← Already have an account? Login
           </button>
         </div>
-        <Button 
+        <Button
           onClick={() => navigate('/payment')}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg font-semibold"
         >
@@ -97,7 +97,7 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
                 <li>• Curated DSA Sheet (150-250 Problems)</li>
                 <li>• Community & Mentor Support</li>
               </ul>
-              <Button 
+              <Button
                 onClick={() => setCurrentView('ebook-access')}
                 className="w-full bg-green-600 hover:bg-green-700 text-white"
               >
@@ -129,13 +129,13 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
                 You have an account but haven't purchased the content yet.
               </p>
               <div className="space-y-3">
-                <Button 
+                <Button
                   onClick={() => setCurrentView('register')}
                   className="w-full bg-green-600 hover:bg-green-700 text-white"
                 >
-                  Complete Purchase - ₹199
+                  Complete Purchase - ₹399
                 </Button>
-                <Button 
+                <Button
                   onClick={handleSwitchToLogin}
                   variant="outline"
                   className="w-full"

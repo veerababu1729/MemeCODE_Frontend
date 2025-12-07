@@ -14,14 +14,14 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration for production
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'production'
     ? [
-        process.env.FRONTEND_URL,
-        'https://memecodefrontend112.vercel.app',
-        'https://skyblue-python-launch.vercel.app',
-        'https://www.memecode.in',
-        'https://memecode.in'
-      ]
+      process.env.FRONTEND_URL,
+      'https://memecodefrontend112.vercel.app',
+      'https://skyblue-python-launch.vercel.app',
+      'https://www.memecode.in',
+      'https://memecode.in'
+    ]
     : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:8080'],
   credentials: true,
   optionsSuccessStatus: 200,
@@ -34,7 +34,7 @@ const corsOptions = {
 if (process.env.NODE_ENV === 'production') {
   // Trust proxy for Render deployment
   app.set('trust proxy', 1);
-  
+
   // Security headers
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -95,7 +95,7 @@ const pool = new Pool({
 const initializeDatabase = async () => {
   try {
     const client = await pool.connect();
-    
+
     // Payments table
     await client.query(`
       CREATE TABLE IF NOT EXISTS payments (
@@ -116,7 +116,7 @@ const initializeDatabase = async () => {
       SELECT column_name FROM information_schema.columns 
       WHERE table_name = 'user_details'
     `);
-    
+
     if (tableExists.rows.length === 0) {
       // Table doesn't exist, create it with all columns
       console.log('📋 Creating user_details table with authentication fields...');
@@ -146,28 +146,28 @@ const initializeDatabase = async () => {
       // Table exists, check if it has the new columns
       const existingColumns = tableExists.rows.map(row => row.column_name);
       console.log('📋 Existing columns:', existingColumns);
-      
+
       // Add missing columns
       if (!existingColumns.includes('email')) {
         console.log('➕ Adding email column...');
         await client.query('ALTER TABLE user_details ADD COLUMN email VARCHAR(255) UNIQUE');
       }
-      
+
       if (!existingColumns.includes('password_hash')) {
         console.log('➕ Adding password_hash column...');
         await client.query('ALTER TABLE user_details ADD COLUMN password_hash VARCHAR(255)');
       }
-      
+
       if (!existingColumns.includes('has_purchased')) {
         console.log('➕ Adding has_purchased column...');
         await client.query('ALTER TABLE user_details ADD COLUMN has_purchased BOOLEAN DEFAULT FALSE');
       }
-      
+
       if (!existingColumns.includes('cgpa')) {
         console.log('➕ Adding cgpa column...');
         await client.query('ALTER TABLE user_details ADD COLUMN cgpa DECIMAL(3,2)');
       }
-      
+
       if (!existingColumns.includes('phone_number')) {
         console.log('➕ Adding phone_number column...');
         await client.query('ALTER TABLE user_details ADD COLUMN phone_number VARCHAR(20)');
@@ -178,11 +178,11 @@ const initializeDatabase = async () => {
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_payments_order_id ON payments(razorpay_order_id);
     `);
-    
+
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_user_details_payment_id ON user_details(payment_id);
     `);
-    
+
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_user_details_email ON user_details(email);
     `);
@@ -206,12 +206,12 @@ const initializeDatabase = async () => {
       WHERE table_name = 'payments'
     `);
     const existingPaymentColumns = paymentsColumns.rows.map(row => row.column_name);
-    
+
     if (!existingPaymentColumns.includes('coupon_code')) {
       console.log('➕ Adding coupon_code column to payments...');
       await client.query('ALTER TABLE payments ADD COLUMN coupon_code VARCHAR(50)');
     }
-    
+
     if (!existingPaymentColumns.includes('original_amount')) {
       console.log('➕ Adding original_amount column to payments...');
       await client.query('ALTER TABLE payments ADD COLUMN original_amount INTEGER');
@@ -220,7 +220,7 @@ const initializeDatabase = async () => {
     // Seed default coupon BTECH
     await client.query(`
       INSERT INTO coupons (code, influencer_name, discount_type, discount_value)
-      VALUES ('BTECH', 'Default', 'fixed', 180000)
+      VALUES ('BTECH', 'Default', 'fixed', 160000)
       ON CONFLICT (code) DO NOTHING
     `);
 
@@ -245,7 +245,7 @@ let emailTransporter;
 if (process.env.BREVO_API_KEY) {
   // Brevo configuration using HTTP API (transactional emails)
   console.log('🔧 Configuring Brevo email service via HTTP API...');
-  
+
   // Create a custom transporter that uses Brevo's transactional API
   emailTransporter = {
     sendMail: async (mailOptions) => {
@@ -294,22 +294,22 @@ if (process.env.BREVO_API_KEY) {
           'Content-Type': 'application/json',
         }
       })
-      .then(response => {
-        if (response.ok) {
-          callback(null, true);
-        } else {
-          callback(new Error(`Brevo API authentication failed: ${response.status}`), false);
-        }
-      })
-      .catch(error => {
-        callback(error, false);
-      });
+        .then(response => {
+          if (response.ok) {
+            callback(null, true);
+          } else {
+            callback(new Error(`Brevo API authentication failed: ${response.status}`), false);
+          }
+        })
+        .catch(error => {
+          callback(error, false);
+        });
     }
   };
 } else if (process.env.RESEND_API_KEY) {
   // Resend configuration using HTTP API (more reliable than SMTP)
   console.log('🔧 Configuring Resend email service via HTTP API...');
-  
+
   // Create a custom transporter that uses Resend's HTTP API
   emailTransporter = {
     sendMail: async (mailOptions) => {
@@ -352,16 +352,16 @@ if (process.env.BREVO_API_KEY) {
           'Content-Type': 'application/json',
         }
       })
-      .then(response => {
-        if (response.ok) {
-          callback(null, true);
-        } else {
-          callback(new Error(`Resend API authentication failed: ${response.status}`), false);
-        }
-      })
-      .catch(error => {
-        callback(error, false);
-      });
+        .then(response => {
+          if (response.ok) {
+            callback(null, true);
+          } else {
+            callback(new Error(`Resend API authentication failed: ${response.status}`), false);
+          }
+        })
+        .catch(error => {
+          callback(error, false);
+        });
     }
   };
 } else if (process.env.SENDGRID_API_KEY) {
@@ -421,7 +421,7 @@ emailTransporter.verify((error, success) => {
 // Function to send password reset email
 const sendPasswordResetEmail = async (email, resetToken, userName = '') => {
   const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
-  
+
   const mailOptions = {
     from: {
       name: 'MemeCODE Team',
@@ -515,7 +515,7 @@ const sendPasswordResetEmail = async (email, resetToken, userName = '') => {
       to: mailOptions.to,
       subject: mailOptions.subject
     });
-    
+
     const info = await emailTransporter.sendMail(mailOptions);
     console.log('✅ Password reset email sent successfully:', info);
     return { success: true, messageId: info.messageId };
@@ -554,7 +554,7 @@ app.get('/api/health', (req, res) => {
 app.get('/api/test-email-config', async (req, res) => {
   try {
     console.log('🧪 Testing email configuration...');
-    
+
     // Check environment variables
     const emailConfig = {
       hasEmailUser: !!process.env.EMAIL_USER,
@@ -567,12 +567,12 @@ app.get('/api/test-email-config', async (req, res) => {
       emailUser: process.env.EMAIL_USER ? process.env.EMAIL_USER.substring(0, 3) + '***' : 'Not set',
       nodeEnv: process.env.NODE_ENV || 'development'
     };
-    
+
     console.log('📧 Email config check:', emailConfig);
-    
+
     // Test email transporter connection
     let connectionTest = { success: false, error: null };
-    
+
     try {
       console.log('🔌 Testing email transporter connection...');
       await new Promise((resolve, reject) => {
@@ -592,17 +592,17 @@ app.get('/api/test-email-config', async (req, res) => {
       console.error('❌ Email connection test failed:', error.message);
       connectionTest = { success: false, error: error.message, code: error.code };
     }
-    
+
     res.json({
       status: 'Email configuration test completed',
       timestamp: new Date().toISOString(),
       config: emailConfig,
       connectionTest: connectionTest,
       transporterType: process.env.BREVO_API_KEY ? 'Brevo' :
-                     process.env.RESEND_API_KEY ? 'Resend' :
-                     process.env.SENDGRID_API_KEY ? 'SendGrid' : 
-                     process.env.MAILGUN_API_KEY ? 'Mailgun' : 
-                     process.env.AWS_ACCESS_KEY_ID ? 'AWS SES' : 'Gmail'
+        process.env.RESEND_API_KEY ? 'Resend' :
+          process.env.SENDGRID_API_KEY ? 'SendGrid' :
+            process.env.MAILGUN_API_KEY ? 'Mailgun' :
+              process.env.AWS_ACCESS_KEY_ID ? 'AWS SES' : 'Gmail'
     });
   } catch (error) {
     console.error('❌ Email config test error:', error);
@@ -618,14 +618,14 @@ app.get('/api/test-email-config', async (req, res) => {
 app.post('/api/test-send-email', async (req, res) => {
   try {
     const { testEmail } = req.body;
-    
+
     if (!testEmail) {
       return res.status(400).json({ error: 'testEmail is required' });
     }
-    
+
     console.log(`🧪 Testing email send to: ${testEmail}`);
     console.log(`🔧 Using transporter type: ${process.env.BREVO_API_KEY ? 'Brevo' : process.env.RESEND_API_KEY ? 'Resend' : 'Other'}`);
-    
+
     const testMailOptions = {
       from: {
         name: 'MemeCODE Test',
@@ -642,16 +642,16 @@ app.post('/api/test-send-email', async (req, res) => {
       `,
       text: `Email Configuration Test - This is a test email sent at ${new Date().toISOString()}`
     };
-    
+
     console.log('📧 Test email options:', {
       from: testMailOptions.from,
       to: testMailOptions.to,
       subject: testMailOptions.subject
     });
-    
+
     const result = await emailTransporter.sendMail(testMailOptions);
     console.log('✅ Test email sent successfully:', result);
-    
+
     res.json({
       success: true,
       message: 'Test email sent successfully',
@@ -676,7 +676,7 @@ app.post('/api/validate-coupon', async (req, res) => {
   const client = await pool.connect();
   try {
     const { code } = req.body;
-    
+
     if (!code) {
       return res.status(400).json({ valid: false, message: 'Coupon code is required' });
     }
@@ -691,7 +691,7 @@ app.post('/api/validate-coupon', async (req, res) => {
     }
 
     const coupon = result.rows[0];
-    
+
     res.json({
       valid: true,
       code: coupon.code,
@@ -712,9 +712,9 @@ app.post('/api/create-order', async (req, res) => {
   let client;
   try {
     console.log('💳 Create order request received:', req.body);
-    
+
     const { amount, currency = 'INR', couponCode } = req.body;
-    
+
     if (!amount) {
       console.log('❌ Amount missing in request');
       return res.status(400).json({ error: 'Amount is required' });
@@ -736,11 +736,11 @@ app.post('/api/create-order', async (req, res) => {
         'SELECT * FROM coupons WHERE code = $1 AND is_active = TRUE',
         [couponCode.toUpperCase()]
       );
-      
+
       if (couponResult.rows.length > 0) {
         const coupon = couponResult.rows[0];
         appliedCoupon = coupon.code;
-        
+
         if (coupon.discount_type === 'percent') {
           const discount = Math.floor((amount * coupon.discount_value) / 100);
           finalAmount = amount - discount;
@@ -762,63 +762,63 @@ app.post('/api/create-order', async (req, res) => {
     console.log('🔄 Creating Razorpay order with options:', options);
     const order = await razorpay.orders.create(options);
     console.log('✅ Razorpay order created successfully:', order.id);
-    
+
     // Store order in database with retry logic
     let dbStored = false;
     let retryCount = 0;
     const maxRetries = 3;
-    
+
     while (!dbStored && retryCount < maxRetries) {
       try {
         console.log(`🔌 Attempting database connection (attempt ${retryCount + 1}/${maxRetries})`);
         client = await pool.connect();
-        
+
         await client.query(
           'INSERT INTO payments (razorpay_order_id, amount, original_amount, currency, status, coupon_code, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
           [order.id, finalAmount, originalAmount, order.currency, 'created', appliedCoupon, new Date()]
         );
-        
+
         console.log('💾 Order stored in database:', order.id);
         dbStored = true;
-        
+
       } catch (dbError) {
         console.error(`❌ Database error (attempt ${retryCount + 1}):`, dbError.message);
-        
+
         if (client) {
           client.release();
           client = null;
         }
-        
+
         retryCount++;
-        
+
         if (retryCount < maxRetries) {
           console.log(`⏳ Retrying in 1 second...`);
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     }
-    
+
     if (!dbStored) {
       console.error('❌ Failed to store order in database after all retries');
       // Still return success since Razorpay order was created
       // The order can be manually reconciled later
       console.log('⚠️ Returning success despite DB failure - order can be reconciled');
     }
-    
+
     const response = {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
       key: process.env.RAZORPAY_KEY_ID
     };
-    
+
     console.log('📤 Sending response:', response);
     res.json(response);
-    
+
   } catch (error) {
     console.error('❌ Error creating Razorpay order:', error);
     console.error('Error details:', error.message);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to create payment order',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
@@ -851,53 +851,53 @@ app.post('/api/verify-payment', async (req, res) => {
       let dbUpdated = false;
       let retryCount = 0;
       const maxRetries = 3;
-      
+
       while (!dbUpdated && retryCount < maxRetries) {
         try {
           console.log(`🔌 Attempting database connection for verification (attempt ${retryCount + 1}/${maxRetries})`);
           client = await pool.connect();
-          
+
           const updateResult = await client.query(
             'UPDATE payments SET razorpay_payment_id = $1, razorpay_signature = $2, status = $3, updated_at = CURRENT_TIMESTAMP WHERE razorpay_order_id = $4 RETURNING id',
             [razorpay_payment_id, razorpay_signature, 'completed', razorpay_order_id]
           );
-          
+
           if (updateResult.rows.length > 0) {
             console.log('✅ Payment verified and updated in database:', razorpay_order_id);
             dbUpdated = true;
-            
-            res.json({ 
-              success: true, 
+
+            res.json({
+              success: true,
               message: 'Payment verified successfully',
-              orderId: razorpay_order_id 
+              orderId: razorpay_order_id
             });
           } else {
             console.log('❌ Payment order not found in database:', razorpay_order_id);
             return res.status(404).json({ success: false, message: 'Payment order not found' });
           }
-          
+
         } catch (dbError) {
           console.error(`❌ Database error during verification (attempt ${retryCount + 1}):`, dbError.message);
-          
+
           if (client) {
             client.release();
             client = null;
           }
-          
+
           retryCount++;
-          
+
           if (retryCount < maxRetries) {
             console.log(`⏳ Retrying verification in 1 second...`);
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
         }
       }
-      
+
       if (!dbUpdated) {
         console.error('❌ Failed to update payment verification in database after all retries');
         res.status(500).json({ success: false, message: 'Database connection failed during verification' });
       }
-      
+
     } else {
       console.log('❌ Invalid payment signature for order:', razorpay_order_id);
       res.status(400).json({ success: false, message: 'Invalid signature' });
@@ -922,7 +922,7 @@ app.post('/api/submit-details', async (req, res) => {
       name: req.body.name,
       hasPassword: !!req.body.password
     });
-    
+
     const {
       orderId,
       email,
@@ -945,7 +945,7 @@ app.post('/api/submit-details', async (req, res) => {
     const requiredFields = {
       orderId: 'Order ID',
       email: 'Email',
-      password: 'Password', 
+      password: 'Password',
       name: 'Name',
       age: 'Age',
       phoneNumber: 'Phone Number',
@@ -991,12 +991,12 @@ app.post('/api/submit-details', async (req, res) => {
     // In development/testing mode, allow both 'created' and 'completed' status
     const isDevelopment = process.env.NODE_ENV === 'development';
     const allowedStatuses = isDevelopment ? ['created', 'completed'] : ['completed'];
-    
+
     if (!allowedStatuses.includes(payment.status)) {
       console.log(`❌ Payment status not allowed. Status: ${payment.status}, Environment: ${process.env.NODE_ENV}`);
       return res.status(400).json({ error: `Payment not completed. Status: ${payment.status}` });
     }
-    
+
     console.log(`✅ Payment found with status: ${payment.status} (Development mode: ${isDevelopment})`);
 
     // Hash password
@@ -1013,22 +1013,22 @@ app.post('/api/submit-details', async (req, res) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING id, email, name`,
       [payment.id, email, passwordHash, name, age, phoneNumber, gender, collegeName, collegeAddress, currentStatus, course, yearOfStudying, yearOfPassedout, reason, cgpa, true]
     );
-    
+
     console.log(`✅ User registered successfully with ID: ${insertResult.rows[0].id}`);
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
-        userId: insertResult.rows[0].id, 
+      {
+        userId: insertResult.rows[0].id,
         email: insertResult.rows[0].email,
-        hasPurchased: true 
+        hasPurchased: true
       },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: 'Registration completed successfully',
       submissionId: insertResult.rows[0].id,
       token: token,
@@ -1044,7 +1044,7 @@ app.post('/api/submit-details', async (req, res) => {
     console.error('❌ Error stack:', error.stack);
     console.error('❌ Error code:', error.code);
     console.error('❌ Error detail:', error.detail);
-    
+
     // Provide more specific error messages
     if (error.code === '23505') { // Unique constraint violation
       console.log('❌ Unique constraint violation');
@@ -1104,10 +1104,10 @@ app.post('/api/login', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
-        userId: user.id, 
+      {
+        userId: user.id,
         email: user.email,
-        hasPurchased: user.has_purchased 
+        hasPurchased: user.has_purchased
       },
       JWT_SECRET,
       { expiresIn: '7d' }
@@ -1137,7 +1137,7 @@ app.get('/api/user-details/:orderId', async (req, res) => {
   const client = await pool.connect();
   try {
     const { orderId } = req.params;
-    
+
     const result = await client.query(
       `SELECT ud.*, p.razorpay_payment_id, p.amount 
        FROM user_details ud 
@@ -1188,7 +1188,7 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
 // Verify token endpoint
 app.post('/api/verify-token', (req, res) => {
   const { token } = req.body;
-  
+
   if (!token) {
     return res.status(400).json({ error: 'Token is required' });
   }
@@ -1197,9 +1197,9 @@ app.post('/api/verify-token', (req, res) => {
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
-    
-    res.json({ 
-      success: true, 
+
+    res.json({
+      success: true,
       user: {
         userId: decoded.userId,
         email: decoded.email,
@@ -1235,11 +1235,11 @@ app.post('/api/forgot-password', async (req, res) => {
     const attempts = forgotPasswordAttempts.get(rateLimitKey) || [];
     const oneHourAgo = Date.now() - 60 * 60 * 1000;
     const recentAttempts = attempts.filter(time => time > oneHourAgo);
-    
+
     if (recentAttempts.length >= 3) {
       console.log(`🚫 Rate limit exceeded for ${email} from ${clientIP}`);
-      return res.status(429).json({ 
-        error: 'Too many password reset attempts. Please try again in an hour.' 
+      return res.status(429).json({
+        error: 'Too many password reset attempts. Please try again in an hour.'
       });
     }
 
@@ -1265,8 +1265,8 @@ app.post('/api/forgot-password', async (req, res) => {
 
     if (userResult.rows.length === 0) {
       // For security, don't reveal if email exists or not
-      return res.status(404).json({ 
-        error: 'No account found with that email address. Please check your email and try again.' 
+      return res.status(404).json({
+        error: 'No account found with that email address. Please check your email and try again.'
       });
     }
 
@@ -1274,8 +1274,8 @@ app.post('/api/forgot-password', async (req, res) => {
 
     // Generate reset token (valid for 1 hour)
     const resetToken = jwt.sign(
-      { 
-        userId: user.id, 
+      {
+        userId: user.id,
         email: user.email,
         type: 'password_reset'
       },
@@ -1285,20 +1285,20 @@ app.post('/api/forgot-password', async (req, res) => {
 
     // Send password reset email (without timeout wrapper - let's see the real error)
     console.log(`📧 Attempting to send password reset email to: ${email}`);
-    
+
     const emailResult = await sendPasswordResetEmail(user.email, resetToken, user.name);
-    
+
     if (emailResult.success) {
       console.log(`✅ Password reset email sent to: ${email}`);
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         message: 'Password reset instructions have been sent to your email address. Please check your inbox and spam folder.',
         // In development, include the token for testing
         ...(process.env.NODE_ENV === 'development' && { resetToken })
       });
     } else {
       console.error(`❌ Failed to send email to: ${email}`, emailResult.error);
-      res.status(500).json({ 
+      res.status(500).json({
         error: 'Failed to send password reset email. Please try again later.',
         // Still provide token in development even if email fails
         ...(process.env.NODE_ENV === 'development' && { resetToken, emailError: emailResult.error })
@@ -1331,7 +1331,7 @@ app.post('/api/reset-password', async (req, res) => {
     let decoded;
     try {
       decoded = jwt.verify(token, JWT_SECRET);
-      
+
       // Check if it's a password reset token
       if (decoded.type !== 'password_reset') {
         throw new Error('Invalid token type');
@@ -1356,9 +1356,9 @@ app.post('/api/reset-password', async (req, res) => {
 
     console.log(`✅ Password reset successful for user: ${decoded.email}`);
 
-    res.json({ 
-      success: true, 
-      message: 'Password has been reset successfully. You can now login with your new password.' 
+    res.json({
+      success: true,
+      message: 'Password has been reset successfully. You can now login with your new password.'
     });
   } catch (error) {
     console.error('Reset password error:', error);

@@ -142,12 +142,12 @@ const HomePage = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [imageVisible, setImageVisible] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -170,7 +170,7 @@ const HomePage = () => {
       imageObserver.disconnect();
     };
   }, []);
-  
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -205,22 +205,22 @@ const HomePage = () => {
           <div className="glitch-effect" />
           <div className="matrix-overlay" />
         </div>
-        
+
         <div className="max-w-6xl mx-auto flex flex-col md:flex-col items-center relative z-10">
           <h3 className="text-2xl md:text-3xl font-bold text-green-600 mb-0">Select One</h3>
           <div className="relative w-full flex justify-center md:justify-center">
             {/* Matrix Image */}
             <div className="relative">
-              <img 
-                src={matrixImage} 
-                alt="Matrix Choice" 
+              <img
+                src={matrixImage}
+                alt="Matrix Choice"
                 className="w-64 md:w-80 lg:w-96 xl:w-[28rem] h-auto drop-shadow-2xl matrix-image-animated"
               />
-              
+
               {/* Left Hand Button - "Struggle?" */}
-              <Button 
+              <Button
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-red-500/50 transition-all duration-300"
-                style={{ 
+                style={{
                   left: '20px',
                   top: '60%',
                   transform: 'translateY(-50%)'
@@ -229,18 +229,18 @@ const HomePage = () => {
               >
                 Struggle?
               </Button>
-              
-              {/* Right Hand Button - "Start with 199" */}
-              <Button 
+
+              {/* Right Hand Button - "Start" */}
+              <Button
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
-                style={{ 
+                style={{
                   right: '20px',
                   top: '60%',
                   transform: 'translateY(-50%)'
                 }}
                 onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Start with 199
+                Start
               </Button>
             </div>
           </div>
@@ -260,14 +260,14 @@ const HomePage = () => {
 
           {/* Python Illustration */}
           <div className="order-2">
-            <div 
+            <div
               ref={imageRef}
-              className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`} 
+              className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
               style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
             >
               <div className="coverpage-container max-w-md lg:max-w-lg mx-auto">
-                <img 
-                  src={pythonIllustration} 
+                <img
+                  src={pythonIllustration}
                   alt="Python Learning Illustration"
                   className="rounded-xl shadow-floating w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
                 />
@@ -279,13 +279,13 @@ const HomePage = () => {
 
       {/* Reviews Section */}
       <ReviewsSection />
-      
-      
-      
-      
+
+
+
+
       {/* FAQ Section */}
       <FAQSection />
-      
+
       {/* Final CTA Section */}
       <section className="pt-20 pb-8 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
         <div className="max-w-4xl mx-auto text-center">
@@ -294,44 +294,44 @@ const HomePage = () => {
             <span className="gradient-text"> Coding Journey?</span>
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of students who chose guidance over struggle. 
+            Join thousands of students who chose guidance over struggle.
             Your coding success story starts here.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <Button 
+            <Button
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 px-8 py-4 text-lg"
               onClick={() => window.open('https://drive.google.com/file/d/1RGkYFYlYIA-QG7RjAb1lhxp58h6_V9VF/view?usp=sharing', '_blank')}
             >
               Need Demo?
             </Button>
-            
-            <Button 
+
+            <Button
               className="hero-button text-lg px-8 py-4"
               onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Start Learning Today - ₹199
+              Start Learning Today
             </Button>
           </div>
         </div>
       </section>
-      
+
       {/* Matrix-themed section at bottom */}
       <section className="pt-0 pb-16 px-4 bg-gradient-to-t from-background to-background/80">
         <div className="max-w-6xl mx-auto flex justify-center">
           <div className="relative">
             {/* Matrix Image */}
             <div className="relative">
-              <img 
-                src={matrixImage} 
-                alt="Matrix Choice" 
+              <img
+                src={matrixImage}
+                alt="Matrix Choice"
                 className="w-64 md:w-80 lg:w-96 xl:w-[28rem] h-auto drop-shadow-2xl matrix-image-animated"
               />
-              
+
               {/* Left Hand Button - "Need demo?" */}
-              <Button 
+              <Button
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-red-500/50 transition-all duration-300"
-                style={{ 
+                style={{
                   left: '20px',
                   top: '60%',
                   transform: 'translateY(-50%)'
@@ -340,24 +340,24 @@ const HomePage = () => {
               >
                 Struggle?
               </Button>
-              
-              {/* Right Hand Button - "Start with 199" */}
-              <Button 
+
+              {/* Right Hand Button - "Start" */}
+              <Button
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
-                style={{ 
+                style={{
                   right: '20px',
                   top: '60%',
                   transform: 'translateY(-50%)'
                 }}
                 onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Start with 199
+                Start
               </Button>
             </div>
           </div>
         </div>
       </section>
-      
+
       {/* Footer */}
       <footer className="bg-background/80 border-t border-border/20 py-8 px-4">
         <div className="max-w-6xl mx-auto">
