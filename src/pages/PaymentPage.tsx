@@ -291,7 +291,6 @@ const PaymentPage = () => {
                     type="text"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                    placeholder="BTECH"
                     className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     onKeyPress={(e) => e.key === 'Enter' && handleCouponApply()}
                   />
