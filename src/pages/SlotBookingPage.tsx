@@ -175,11 +175,11 @@ const SlotBookingPage = () => {
                                 </p>
                                 <p className="flex items-start gap-2">
                                     <span className="text-green-600 font-bold">✓</span>
-                                    <span>Get <strong>₹49 discount</strong> on the full course price</span>
+                                    <span>Get <strong>₹49 Less</strong> on the full ebook price</span>
                                 </p>
                                 <p className="flex items-start gap-2">
                                     <span className="text-green-600 font-bold">✓</span>
-                                    <span>Your slot is now reserved - secure your spot today!</span>
+                                    <span>Take a screenshot of this couponcode</span>
                                 </p>
                             </div>
                         </div>
@@ -207,10 +207,10 @@ const SlotBookingPage = () => {
                         <div className="space-y-3">
                             <Button
                                 onClick={() => navigate('/payment')}
-                                className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg group"
+                                className="w-full py-4 sm:py-6 text-base sm:text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg group"
                             >
-                                Complete Course Payment Now
-                                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                                Complete Full Payment
+                                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                             </Button>
 
                             <Button
