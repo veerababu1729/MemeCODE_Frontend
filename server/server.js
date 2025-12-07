@@ -217,10 +217,22 @@ const initializeDatabase = async () => {
       await client.query('ALTER TABLE payments ADD COLUMN original_amount INTEGER');
     }
 
-    // Seed default coupon BTECH
+    if (!existingPaymentColumns.includes('payment_type')) {
+      console.log('➕ Adding payment_type column to payments...');
+      await client.query("ALTER TABLE payments ADD COLUMN payment_type VARCHAR(20) DEFAULT 'full'");
+    }
+
+    // Seed default coupons
     await client.query(`
       INSERT INTO coupons (code, influencer_name, discount_type, discount_value)
       VALUES ('BTECH', 'Default', 'fixed', 160000)
+      ON CONFLICT (code) DO NOTHING
+    `);
+
+    // Seed slot49 coupon
+    await client.query(`
+      INSERT INTO coupons (code, influencer_name, discount_type, discount_value)
+      VALUES ('SLOT49', 'Slot Booking', 'fixed', 4900)
       ON CONFLICT (code) DO NOTHING
     `);
 
@@ -713,7 +725,7 @@ app.post('/api/create-order', async (req, res) => {
   try {
     console.log('💳 Create order request received:', req.body);
 
-    const { amount, currency = 'INR', couponCode } = req.body;
+    const { amount, currency = 'INR', couponCode, paymentType = 'full' } = req.body;
 
     if (!amount) {
       console.log('❌ Amount missing in request');
@@ -724,6 +736,8 @@ app.post('/api/create-order', async (req, res) => {
       console.error('❌ Razorpay credentials not configured');
       return res.status(500).json({ error: 'Payment service not configured' });
     }
+
+    console.log(`💰 Payment type: ${paymentType}, Amount: ${amount}`);
 
     // Calculate final amount if coupon is present
     let finalAmount = amount;
@@ -774,8 +788,8 @@ app.post('/api/create-order', async (req, res) => {
         client = await pool.connect();
 
         await client.query(
-          'INSERT INTO payments (razorpay_order_id, amount, original_amount, currency, status, coupon_code, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-          [order.id, finalAmount, originalAmount, order.currency, 'created', appliedCoupon, new Date()]
+          'INSERT INTO payments (razorpay_order_id, amount, original_amount, currency, status, coupon_code, payment_type, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+          [order.id, finalAmount, originalAmount, order.currency, 'created', appliedCoupon, paymentType, new Date()]
         );
 
         console.log('💾 Order stored in database:', order.id);

@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ResetPasswordForm from "./components/ResetPasswordForm";
 import LoginPage from "./pages/LoginPage";
 import PaymentPage from "./pages/PaymentPage";
+import SlotBookingPage from "./pages/SlotBookingPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import EbookAccessPage from "./pages/EbookAccessPage";
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/reset-password" element={<ResetPasswordForm />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/slotbookingpage" element={<SlotBookingPage />} />
           <Route path="/registration" element={<RegistrationPage />} />
           <Route path="/ebook-access" element={<EbookAccessPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

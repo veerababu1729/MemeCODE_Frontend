@@ -355,8 +355,11 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          <p className="text-xs text-center text-muted-foreground px-2">
-            "One simple decision may turn the life"
+          <p
+            className="text-xs text-center text-primary font-semibold px-2 cursor-pointer hover:text-primary/80 transition-colors underline"
+            onClick={() => navigate('/slotbookingpage')}
+          >
+            I want to reserve my slot
           </p>
         </CardContent>
       </Card>
