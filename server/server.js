@@ -232,7 +232,7 @@ const initializeDatabase = async () => {
     // Seed slot49 coupon
     await client.query(`
       INSERT INTO coupons (code, influencer_name, discount_type, discount_value)
-      VALUES ('SLOT49', 'Slot Booking', 'fixed', 175100)
+      VALUES ('SLOT49', 'Slot Booking', 'fixed', 174900)
       ON CONFLICT (code) DO NOTHING
     `);
 

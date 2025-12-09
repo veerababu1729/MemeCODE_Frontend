@@ -254,6 +254,15 @@ const PaymentPage = () => {
             />
           </div>
 
+          <a
+            href="https://drive.google.com/file/d/1-YBwzVTVeuW1LKJcuebhG9uzcnbVlEQz/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-center text-sky-500 font-semibold px-2 hover:text-sky-700 transition-colors underline block"
+          >
+            I need a demo before buying
+          </a>
+
           {/* Coupon Section */}
           <div className="space-y-3">
             {/* Applied Coupon Display */}
@@ -281,7 +290,7 @@ const PaymentPage = () => {
                 <div className="text-center">
                   <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-3 mb-2 shadow-lg">
                     <p className="text-sm font-bold text-yellow-800 animate-bounce">
-                      🎉 Apply coupon code to get a discount 🎉
+                      🎉 Apply coupon code to get discount 🎉
                     </p>
 
                   </div>
