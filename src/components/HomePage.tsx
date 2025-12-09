@@ -301,7 +301,7 @@ const HomePage = () => {
             <Button
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 px-8 py-4 text-lg"
-              onClick={() => window.open('https://drive.google.com/file/d/1-YBwzVTVeuW1LKJcuebhG9uzcnbVlEQz/view?usp=sharing', '_blank')}
+              onClick={() => window.open('https://drive.google.com/file/d/1NZBvjLi71kS7lo9O_fEB4d4-mLEORJbO/view?usp=sharing', '_blank')}
             >
               Need Demo?
             </Button>
