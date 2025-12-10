@@ -1,9 +1,9 @@
 import { ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import PaymentSection from './PaymentSection';
 import ReviewsSection from './ReviewsSection';
 import FAQSection from './FAQSection';
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import matrixImage from '@/assets/matrix.png';
 import pythonIllustration from '@/assets/coverpage.png';
 import demoVideo from '@/assets/demovideo.mp4';
@@ -139,6 +139,7 @@ const DemoVideo = () => {
 };
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [imageVisible, setImageVisible] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -193,7 +194,194 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Matrix Image Section - Above Reviews */}
+      {/* Demo Video Section - Placed after Hero Quote */}
+      <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
+        <div className="max-w-7xl mx-auto flex justify-center">
+          <DemoVideo />
+        </div>
+      </section>
+
+      {/* Buy Now CTA - After Video */}
+      <section className="py-8 px-4 bg-gradient-to-br from-muted/30 to-background">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <Button
+            className="w-full max-w-md text-xl md:text-2xl py-6 md:py-8 px-12 md:px-16 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40"
+            onClick={() => navigate('/payment')}
+          >
+            {/* Continuous sparkle background */}
+            <div className="absolute inset-0 opacity-40">
+              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping"></div>
+              <div className="absolute top-4 right-6 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-300"></div>
+              <div className="absolute bottom-3 left-8 w-1 h-1 bg-yellow-200 rounded-full animate-ping animation-delay-500"></div>
+              <div className="absolute bottom-5 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
+            </div>
+
+            {/* Shining sweep effect */}
+            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-in-out"></div>
+
+            {/* Pulsing border with glow */}
+            <div className="absolute inset-0 rounded-xl border-2 border-white/30 group-hover:border-yellow-300/60 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:shadow-[0_0_30px_rgba(255,235,59,0.5)]"></div>
+
+            {/* Button content */}
+            <div className="relative flex items-center justify-center gap-3">
+              <span className="tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(255,235,59,0.6)]">Buy Now</span>
+            </div>
+
+            {/* Bottom glow */}
+            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-4/5 h-2 bg-green-400/60 blur-sm group-hover:bg-yellow-300/80 group-hover:h-3 transition-all duration-300"></div>
+          </Button>
+
+
+        </div>
+      </section>
+
+      {/* Python Illustration Section - Placed after Video */}
+      <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
+        <div className="max-w-7xl mx-auto flex justify-center">
+          <div
+            ref={imageRef}
+            className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
+            style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
+          >
+            {/* Theater Marquee Frame */}
+            <div className="relative max-w-md lg:max-w-lg mx-auto">
+              {/* Brown/Red Border Frame */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-800 via-red-900 to-amber-900 rounded-2xl shadow-2xl" style={{ margin: '-24px', padding: '24px', border: '4px solid #92400e' }}>
+                {/* Inner accent border */}
+                <div className="absolute inset-0 border-2 border-amber-600 rounded-xl" style={{ margin: '12px' }}></div>
+              </div>
+
+              {/* Yellow Glowing Bulbs */}
+              {/* Top bulbs */}
+              {[...Array(16)].map((_, i) => (
+                <div
+                  key={`top-${i}`}
+                  className="absolute w-3.5 h-3.5 rounded-full"
+                  style={{
+                    top: '-18px',
+                    left: `${(i + 0.5) * 6.25}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 20px 6px rgba(251, 191, 36, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08}s`,
+                    border: '2px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Bottom bulbs */}
+              {[...Array(16)].map((_, i) => (
+                <div
+                  key={`bottom-${i}`}
+                  className="absolute w-3.5 h-3.5 rounded-full"
+                  style={{
+                    bottom: '-18px',
+                    left: `${(i + 0.5) * 6.25}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 20px 6px rgba(251, 191, 36, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08 + 0.04}s`,
+                    border: '2px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Left bulbs */}
+              {[...Array(11)].map((_, i) => (
+                <div
+                  key={`left-${i}`}
+                  className="absolute w-3.5 h-3.5 rounded-full"
+                  style={{
+                    left: '-18px',
+                    top: `${(i + 0.5) * 9.09}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 20px 6px rgba(251, 191, 36, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08 + 0.08}s`,
+                    border: '2px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Right bulbs */}
+              {[...Array(11)].map((_, i) => (
+                <div
+                  key={`right-${i}`}
+                  className="absolute w-3.5 h-3.5 rounded-full"
+                  style={{
+                    right: '-18px',
+                    top: `${(i + 0.5) * 9.09}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 20px 6px rgba(251, 191, 36, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08 + 0.12}s`,
+                    border: '2px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Image */}
+              <div className="relative z-10 p-1">
+                <img
+                  src={pythonIllustration}
+                  alt="Python Learning Illustration"
+                  className="rounded-lg w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Buy Now CTA - Placed after Coverpage */}
+      <section className="py-8 px-4 bg-gradient-to-br from-muted/30 to-background">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <Button
+            className="w-full max-w-md text-xl md:text-2xl py-6 md:py-8 px-12 md:px-16 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-black font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40"
+            onClick={() => navigate('/payment')}
+          >
+            {/* Continuous sparkle background */}
+            <div className="absolute inset-0 opacity-40">
+              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping"></div>
+              <div className="absolute top-4 right-6 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-300"></div>
+              <div className="absolute bottom-3 left-8 w-1 h-1 bg-yellow-200 rounded-full animate-ping animation-delay-500"></div>
+              <div className="absolute bottom-5 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
+            </div>
+
+            {/* Shining sweep effect */}
+            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-in-out"></div>
+
+            {/* Pulsing border with glow */}
+            <div className="absolute inset-0 rounded-xl border-2 border-white/30 group-hover:border-yellow-300/60 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:shadow-[0_0_30px_rgba(255,235,59,0.5)]"></div>
+
+            {/* Button content */}
+            <div className="relative flex items-center justify-center gap-3">
+              <span className="tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(255,235,59,0.6)]">Buy Now</span>
+            </div>
+
+            {/* Bottom glow */}
+            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-4/5 h-2 bg-green-400/60 blur-sm group-hover:bg-yellow-300/80 group-hover:h-3 transition-all duration-300"></div>
+          </Button>
+
+          {/* Login link for existing users */}
+          <div className="text-center mt-4">
+            <p className="text-sm text-muted-foreground">
+              Already purchased?
+              <button
+                className="text-blue-600 hover:text-blue-800 underline ml-1 font-medium transition-colors"
+                onClick={() => navigate('/login')}
+              >
+                Login here
+              </button>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section - Placed after Coverpage */}
+      <ReviewsSection />
+
+      {/* Matrix Image Section */}
       <section className="py-8 px-4 bg-gradient-to-br from-primary/5 to-accent/5 relative overflow-hidden">
         {/* Matrix Digital Rain Background - Only behind image */}
         <div className="absolute inset-0 cse-bg">
@@ -217,7 +405,7 @@ const HomePage = () => {
                 className="w-64 md:w-80 lg:w-96 xl:w-[28rem] h-auto drop-shadow-2xl matrix-image-animated"
               />
 
-              {/* Left Hand Button - "Struggle?" */}
+              {/* Left Hand Button - "I Need a Demo" */}
               <Button
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-red-500/50 transition-all duration-300"
                 style={{
@@ -225,12 +413,12 @@ const HomePage = () => {
                   top: '60%',
                   transform: 'translateY(-50%)'
                 }}
-                onClick={() => window.open('https://share.google/images/Jvq49TzWsamUJ4cjd', '_blank')}
+                onClick={() => window.open('https://drive.google.com/file/d/1NZBvjLi71kS7lo9O_fEB4d4-mLEORJbO/view?usp=sharing', '_blank')}
               >
-                Struggle?
+                I Need a Demo
               </Button>
 
-              {/* Right Hand Button - "Start" */}
+              {/* Right Hand Button - "Buy Now" */}
               <Button
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
                 style={{
@@ -238,125 +426,19 @@ const HomePage = () => {
                   top: '60%',
                   transform: 'translateY(-50%)'
                 }}
-                onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => navigate('/payment')}
               >
-                Start
+                Buy Now
               </Button>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Payment Section */}
-      <PaymentSection />
-
-      {/* Demo Video and Python Illustration Section - Responsive Layout */}
-      <section className="py-16 md:py-20 lg:py-24 px-4 bg-gradient-to-br from-muted/30 to-background">
-        <div className="max-w-7xl mx-auto grid gap-12 lg:grid-cols-2 items-center">
-          {/* Demo Video - appears above illustration on mobile, side-by-side on desktop */}
-          <div className="order-1">
-            <DemoVideo />
-          </div>
-
-          {/* Python Illustration */}
-          <div className="order-2">
-            <div
-              ref={imageRef}
-              className={`relative transition-all duration-600 ${imageVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
-              style={{ transitionDelay: imageVisible ? '0.2s' : '0s' }}
-            >
-              <div className="coverpage-container max-w-md lg:max-w-lg mx-auto">
-                <img
-                  src={pythonIllustration}
-                  alt="Python Learning Illustration"
-                  className="rounded-xl shadow-floating w-full h-auto hover:scale-105 transition-transform duration-500 relative z-10"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Reviews Section */}
-      <ReviewsSection />
-
 
 
 
       {/* FAQ Section */}
       <FAQSection />
-
-      {/* Final CTA Section */}
-      <section className="pt-20 pb-8 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Transform Your
-            <span className="gradient-text"> Coding Journey?</span>
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of students who chose guidance over struggle.
-            Your coding success story starts here.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <Button
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 px-8 py-4 text-lg"
-              onClick={() => window.open('https://drive.google.com/file/d/1NZBvjLi71kS7lo9O_fEB4d4-mLEORJbO/view?usp=sharing', '_blank')}
-            >
-              Need Demo?
-            </Button>
-
-            <Button
-              className="hero-button text-lg px-8 py-4"
-              onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Start Learning Today
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Matrix-themed section at bottom */}
-      <section className="pt-0 pb-16 px-4 bg-gradient-to-t from-background to-background/80">
-        <div className="max-w-6xl mx-auto flex justify-center">
-          <div className="relative">
-            {/* Matrix Image */}
-            <div className="relative">
-              <img
-                src={matrixImage}
-                alt="Matrix Choice"
-                className="w-64 md:w-80 lg:w-96 xl:w-[28rem] h-auto drop-shadow-2xl matrix-image-animated"
-              />
-
-              {/* Left Hand Button - "Need demo?" */}
-              <Button
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-red-500/50 transition-all duration-300"
-                style={{
-                  left: '20px',
-                  top: '60%',
-                  transform: 'translateY(-50%)'
-                }}
-                onClick={() => window.open('https://share.google/images/Jvq49TzWsamUJ4cjd', '_blank')}
-              >
-                Struggle?
-              </Button>
-
-              {/* Right Hand Button - "Start" */}
-              <Button
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-bold shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
-                style={{
-                  right: '20px',
-                  top: '60%',
-                  transform: 'translateY(-50%)'
-                }}
-                onClick={() => document.querySelector('#payment')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Start
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-background/80 border-t border-border/20 py-8 px-4">

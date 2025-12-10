@@ -12,6 +12,125 @@ declare global {
   }
 }
 
+// Flip Clock Digit Component
+const FlipDigit = ({ digit }: { digit: string }) => (
+  <div className="relative bg-gradient-to-b from-green-700 to-green-900 rounded px-1.5 py-0.5 shadow-md border border-green-800">
+    <div className="absolute inset-x-0 top-1/2 h-[0.5px] bg-green-800"></div>
+    <span className="text-base md:text-lg font-bold text-white font-mono">
+      {digit}
+    </span>
+  </div>
+);
+
+// Scarcity Counters Component
+const ScarcityCounters = () => {
+  const [purchaseCount, setPurchaseCount] = useState(0);
+  const [slotsLeft, setSlotsLeft] = useState(15);
+
+  useEffect(() => {
+    // Initialize from localStorage or set defaults
+    const initializeCounts = () => {
+      const storedPurchases = localStorage.getItem('purchaseCount');
+      const storedSlots = localStorage.getItem('slotsLeft');
+      const lastUpdateTime = localStorage.getItem('countersLastUpdate');
+
+      if (storedPurchases && storedSlots && lastUpdateTime) {
+        const elapsed = Math.floor((Date.now() - parseInt(lastUpdateTime, 10)) / 5000); // 5-second intervals
+
+        const currentPurchases = parseInt(storedPurchases, 10) + elapsed;
+        const currentSlots = Math.max(2, parseInt(storedSlots, 10) - elapsed);
+
+        setPurchaseCount(currentPurchases);
+        setSlotsLeft(currentSlots);
+
+        localStorage.setItem('purchaseCount', currentPurchases.toString());
+        localStorage.setItem('slotsLeft', currentSlots.toString());
+      } else {
+        // First time - initialize with random starting values
+        const initialPurchases = Math.floor(Math.random() * 200) + 1200; // 1200-1400
+        setPurchaseCount(initialPurchases);
+        setSlotsLeft(15);
+
+        localStorage.setItem('purchaseCount', initialPurchases.toString());
+        localStorage.setItem('slotsLeft', '15');
+      }
+
+      localStorage.setItem('countersLastUpdate', Date.now().toString());
+    };
+
+    initializeCounts();
+
+    // Update every 5 seconds
+    const interval = setInterval(() => {
+      setPurchaseCount(prev => {
+        const newValue = prev + 1;
+        localStorage.setItem('purchaseCount', newValue.toString());
+        localStorage.setItem('countersLastUpdate', Date.now().toString());
+        return newValue;
+      });
+
+      setSlotsLeft(prev => {
+        const newValue = Math.max(2, prev - 1);
+        localStorage.setItem('slotsLeft', newValue.toString());
+        return newValue;
+      });
+    }, 5000); // Every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Format numbers to display digits
+  const purchaseDigits = purchaseCount.toString().padStart(4, '0').split('');
+  const slotsDigits = slotsLeft.toString().padStart(2, '0').split('');
+
+  return { purchaseDigits, slotsDigits, slotsLeft };
+};
+
+// People Purchased Counter Component
+const PurchaseCounter = () => {
+  const { purchaseDigits } = ScarcityCounters();
+
+  return (
+    <div className="p-1">
+      <div className="flex items-center justify-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-gray-700">People purchased:</span>
+        </div>
+        <div className="flex gap-1">
+          {purchaseDigits.map((digit, index) => (
+            <FlipDigit key={`purchase-${index}`} digit={digit} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Slots Left Counter Component
+const SlotsCounter = () => {
+  const { slotsDigits, slotsLeft } = ScarcityCounters();
+
+  return (
+    <div className="p-1">
+      <div className="flex items-center justify-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-gray-700">Slots left:</span>
+          {slotsLeft <= 10 && (
+            <span className="text-red-600 animate-bounce">⚠️</span>
+          )}
+        </div>
+        <div className="flex gap-1">
+          {slotsDigits.map((digit, index) => (
+            <FlipDigit key={`slots-${index}`} digit={digit} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
 const PaymentPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -239,19 +358,102 @@ const PaymentPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex items-center justify-center p-3 sm:p-4">
       <Card className="w-full max-w-md mx-auto">
-        <CardHeader className="text-center px-4 sm:px-6">
+        <CardHeader className="text-center px-4 py-3">
           <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
             Complete Your Purchase
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
-          <div className="flex justify-center">
-            <img
-              src={ebookCover}
-              alt="MemeCode Ebook Cover"
-              className="rounded-xl shadow-floating w-full max-w-[250px] sm:max-w-[250px] h-auto"
-            />
+        <CardContent className="space-y-2 px-4 pb-4">
+          {/* People Purchased Counter - Right below heading */}
+          <PurchaseCounter />
+          {/* Theater Marquee Frame for Ebook Cover */}
+          <div className="flex justify-center py-6">
+            <div className="relative max-w-[200px] mx-auto">
+              {/* Brown/Red Border Frame */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-800 via-red-900 to-amber-900 rounded-xl shadow-xl" style={{ margin: '-16px', padding: '16px', border: '3px solid #92400e' }}>
+                {/* Inner accent border */}
+                <div className="absolute inset-0 border border-amber-600 rounded-lg" style={{ margin: '8px' }}></div>
+              </div>
+
+              {/* Yellow Glowing Bulbs */}
+              {/* Top bulbs */}
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={`top-${i}`}
+                  className="absolute w-2.5 h-2.5 rounded-full"
+                  style={{
+                    top: '-12px',
+                    left: `${(i + 0.5) * 12.5}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 15px 4px rgba(251, 191, 36, 0.9), inset 0 0 6px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08}s`,
+                    border: '1.5px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Bottom bulbs */}
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={`bottom-${i}`}
+                  className="absolute w-2.5 h-2.5 rounded-full"
+                  style={{
+                    bottom: '-12px',
+                    left: `${(i + 0.5) * 12.5}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 15px 4px rgba(251, 191, 36, 0.9), inset 0 0 6px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08 + 0.04}s`,
+                    border: '1.5px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Left bulbs */}
+              {[...Array(10)].map((_, i) => (
+                <div
+                  key={`left-${i}`}
+                  className="absolute w-2.5 h-2.5 rounded-full"
+                  style={{
+                    left: '-12px',
+                    top: `${(i + 0.5) * 10}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 15px 4px rgba(251, 191, 36, 0.9), inset 0 0 6px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08 + 0.08}s`,
+                    border: '1.5px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Right bulbs */}
+              {[...Array(10)].map((_, i) => (
+                <div
+                  key={`right-${i}`}
+                  className="absolute w-2.5 h-2.5 rounded-full"
+                  style={{
+                    right: '-12px',
+                    top: `${(i + 0.5) * 10}%`,
+                    backgroundColor: '#fbbf24',
+                    boxShadow: '0 0 15px 4px rgba(251, 191, 36, 0.9), inset 0 0 6px rgba(255, 255, 255, 0.6)',
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.08 + 0.12}s`,
+                    border: '1.5px solid #f59e0b'
+                  }}
+                ></div>
+              ))}
+
+              {/* Image */}
+              <div className="relative z-10 p-0.5">
+                <img
+                  src={ebookCover}
+                  alt="MemeCode Ebook Cover"
+                  className="rounded-lg w-full max-w-[200px] h-auto"
+                />
+              </div>
+            </div>
           </div>
 
           <a
@@ -263,11 +465,14 @@ const PaymentPage = () => {
             I need a demo before buying
           </a>
 
+          {/* Slots Left Counter - Above coupon */}
+          <SlotsCounter />
+
           {/* Coupon Section */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Applied Coupon Display */}
             {couponApplied && (
-              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-2">
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-green-600" />
                   <span className="text-sm font-medium text-green-800">{validCouponCode} applied</span>
@@ -288,7 +493,7 @@ const PaymentPage = () => {
             {!couponApplied && (
               <div className="space-y-2">
                 <div className="text-center">
-                  <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-3 mb-2 shadow-lg">
+                  <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-2 mb-1 shadow-lg">
                     <p className="text-sm font-bold text-yellow-800 animate-bounce whitespace-nowrap">
                       🎉Apply coupon code to get discount🎉
                     </p>
@@ -331,7 +536,7 @@ const PaymentPage = () => {
           <Button
             onClick={handlePayment}
             disabled={loading}
-            className="w-full py-4 sm:py-6 text-base sm:text-lg font-semibold group relative overflow-hidden shine-button"
+            className="w-full py-3 text-base font-semibold group relative overflow-hidden shine-button"
           >
             {loading ? (
               <>
@@ -348,24 +553,10 @@ const PaymentPage = () => {
             )}
           </Button>
 
-          {/* Timer */}
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-full shadow-sm">
-              <Clock className={`w-3 h-3 sm:w-4 sm:h-4 ${timeRemaining <= 60 ? 'text-red-600 animate-pulse' : 'text-orange-600'}`} />
-              <div className="flex items-center gap-1 sm:gap-2">
-                <span className="text-xs sm:text-sm text-orange-600 font-medium">Time remaining</span>
-                <span
-                  className={`font-bold text-sm sm:text-lg ${timeRemaining <= 60 ? 'text-red-700 animate-pulse' : 'text-orange-700'
-                    }`}
-                >
-                  {formatTimer(timeRemaining)}
-                </span>
-              </div>
-            </div>
-          </div>
+
 
           <p
-            className="text-xs text-center text-primary font-semibold px-2 cursor-pointer hover:text-primary/80 transition-colors underline"
+            className="text-xs text-right text-primary font-semibold px-2 cursor-pointer hover:text-primary/80 transition-colors underline"
             onClick={() => navigate('/slotbookingpage')}
           >
             I want to reserve my slot
