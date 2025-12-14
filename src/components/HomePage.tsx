@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import matrixImage from '@/assets/matrix.png';
 import pythonIllustration from '@/assets/coverpage.png';
-import demoVideo from '@/assets/demovideo.mp4';
+
 
 // Matrix Digital Rain Component
 const MatrixRain = () => {
@@ -97,41 +97,18 @@ const MatrixOrbs = () => {
 
 // Single demo video component (one video instance, reused across layouts)
 const DemoVideo = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  const handlePlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
-  };
-
   return (
     <div className="w-full flex justify-center">
       <div className="w-full max-w-xs sm:max-w-sm">
         <div className="relative rounded-xl overflow-hidden shadow-floating hover:shadow-glow transition-all duration-500 aspect-[9/16] bg-black">
-          <video
-            ref={videoRef}
-            onPlay={() => setIsPlaying(true)}
-            controls
-            className="w-full h-full object-contain"
-            poster="/api/placeholder/270/480"
-          >
-            <source src={demoVideo} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          {!isPlaying && (
-            <button
-              type="button"
-              onClick={handlePlay}
-              className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
-            >
-              <span className="px-4 py-2 rounded-full bg-sky-500 hover:bg-sky-600 text-white text-sm sm:text-base font-semibold shadow-lg ring-2 ring-sky-200">
-                Play video
-              </span>
-            </button>
-          )}
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/9GsvS5ieTeM"
+            title="MemeCODE Demo Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          ></iframe>
         </div>
       </div>
     </div>
