@@ -136,6 +136,11 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Timer state (5 minutes = 300 seconds)
   const getStoredTimer = () => {
     if (typeof window !== 'undefined') {
