@@ -356,7 +356,37 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex items-center justify-center p-3 sm:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex flex-col items-center justify-center p-3 sm:p-4 gap-4">
+      {/* Savings Info Section */}
+      <Card className="w-full max-w-md mx-auto bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-100 shadow-lg overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-100 rounded-full blur-3xl -mr-12 -mt-12 opacity-50"></div>
+        <CardContent className="p-5 space-y-4 relative z-10">
+          <h2 className="text-xl font-extrabold text-center text-emerald-800 flex items-center justify-center gap-2 font-display tracking-tight">
+            <span className="text-2xl filter drop-shadow-sm">💰</span> How much this ebook saves you?
+          </h2>
+          <ul className="space-y-3 font-medium">
+            <li className="flex items-start gap-3 bg-white/60 p-2.5 rounded-lg border border-emerald-100/50 shadow-sm hover:shadow-md transition-shadow">
+              <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+              <span className="text-slate-700 text-sm leading-relaxed">
+                You will save <span className="font-bold text-emerald-700">₹1500-2000</span> per project buying from outside.
+              </span>
+            </li>
+            <li className="flex items-start gap-3 bg-white/60 p-2.5 rounded-lg border border-emerald-100/50 shadow-sm hover:shadow-md transition-shadow">
+              <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+              <span className="text-slate-700 text-sm leading-relaxed">
+                You will save <span className="font-bold text-emerald-700">₹5k - 10k</span> on outside meaningless courses.
+              </span>
+            </li>
+            <li className="flex items-start gap-3 bg-emerald-100/50 p-2.5 rounded-lg border border-emerald-200 shadow-sm hover:shadow-md transition-shadow">
+              <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+              <span className="text-slate-800 text-sm font-semibold leading-relaxed">
+                Mainly you will save your whole career and meaning of your <span className="text-emerald-800 font-extrabold border-b-2 border-emerald-300">19 yrs of education</span>.
+              </span>
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
+
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="text-center px-4 py-3">
           <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">

@@ -333,6 +333,74 @@ const HomePage = () => {
         </div>
       </section>
 
+
+
+      {/* Why MemeCODE Ebook Section */}
+      <section className="py-16 px-4 bg-gradient-to-b from-background via-muted/50 to-background overflow-hidden">
+        <div className="max-w-3xl mx-auto relative">
+          {/* Floating elements for animation background */}
+          <div className="absolute -top-10 -left-10 w-20 h-20 bg-red-500/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-1/2 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-xl animate-pulse delay-700"></div>
+
+          {/* Title */}
+          <div className="text-center mb-12 transform hover:scale-105 transition-transform duration-500">
+            <h2 className="text-4xl md:text-5xl font-bold inline-block relative">
+              <span className="text-foreground">Why </span>
+              <span className="text-[#ff3333] drop-shadow-md">MemeCODE</span>
+              <span className="text-foreground"> - </span>
+              <span className="text-[#f0f0f0] drop-shadow-md bg-stone-800 px-2 py-0.5 rounded ml-1">EBook?</span>
+
+              {/* Underline decorative */}
+              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-[#ff3333] to-transparent"></div>
+            </h2>
+          </div>
+
+          {/* Content Card with Image Styles */}
+          <div className="relative group perspective-1000">
+            {/* Card Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:rotate-1">
+              {/* Header - Dark Teal from image */}
+              <div className="bg-[#0f4c4f] p-6 border-b-4 border-[#0a3537] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-white/5 rounded-full -mr-10 -mt-10"></div>
+                <h3 className="text-2xl md:text-3xl font-bold text-center text-[#e8dec8] tracking-wide relative z-10">
+                  What you get :
+                </h3>
+              </div>
+
+              {/* Body - Beige/Cream from image */}
+              <div className="bg-[#f2ead5] p-8 md:p-10 space-y-6">
+                {/* Point 1 */}
+                <div className="flex items-start space-x-4 p-4 rounded-xl bg-white/50 border border-stone-200 hover:bg-white hover:shadow-lg transition-all duration-300 transform translate-x-0 hover:translate-x-2">
+                  <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-2xl animate-bounce shadow-sm text-green-600">
+                    📚
+                  </div>
+                  <p className="text-lg md:text-xl font-bold text-stone-800 pt-1">
+                    All placement material in one ebook.
+                  </p>
+                </div>
+
+                {/* Point 2 */}
+                <div className="flex items-start space-x-4 p-4 rounded-xl bg-white/50 border border-stone-200 hover:bg-white hover:shadow-lg transition-all duration-300 transform translate-x-0 hover:translate-x-2 delay-100">
+                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-2xl animate-pulse shadow-sm text-blue-600">
+                    ✨
+                  </div>
+                  <div>
+                    <p className="text-lg md:text-xl font-bold text-stone-800 leading-relaxed">
+                      Get ur placements with <span className="text-red-600">0% confusion</span>, <span className="text-red-600">0% doubt</span>, <span className="text-red-600">0% stress</span>.
+                    </p>
+                    <p className="text-xl md:text-2xl font-extrabold text-green-700 mt-2 animate-pulse">
+                      100% clarity
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Buy Now CTA - Placed after Coverpage */}
       <section className="py-8 px-4 bg-gradient-to-br from-muted/30 to-background">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
@@ -459,16 +527,18 @@ const HomePage = () => {
       </footer>
 
       {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <Button
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary hover:bg-primary-deep shadow-floating hover:shadow-glow transition-all duration-300 z-50"
-          size="icon"
-        >
-          <ArrowUp className="w-6 h-6" />
-        </Button>
-      )}
-    </div>
+      {
+        showScrollTop && (
+          <Button
+            onClick={scrollToTop}
+            className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary hover:bg-primary-deep shadow-floating hover:shadow-glow transition-all duration-300 z-50"
+            size="icon"
+          >
+            <ArrowUp className="w-6 h-6" />
+          </Button>
+        )
+      }
+    </div >
   );
 };
 
