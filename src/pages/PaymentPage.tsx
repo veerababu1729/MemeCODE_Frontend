@@ -139,6 +139,12 @@ const PaymentPage = () => {
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Silent Wake-Up: Ping the backend to wake up Render free tier
+    // We don't wait for this or handle errors - it's fire and forget
+    fetch(API_ENDPOINTS.HEALTH_CHECK).catch(() => {
+      // Ignore wake-up errors, payment flow handles actual errors
+    });
   }, []);
 
   // Timer state (5 minutes = 300 seconds)
