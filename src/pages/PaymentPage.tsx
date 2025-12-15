@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, CreditCard, Shield, CheckCircle, Clock, Tag, X } from 'lucide-react';
+import { Loader2, CreditCard, Shield, CheckCircle, Clock, Tag, X, Check } from 'lucide-react';
 import { API_ENDPOINTS } from '@/config/api';
 import ebookCover from '@/assets/coverpage.png';
 
@@ -91,7 +91,7 @@ const PurchaseCounter = () => {
   const { purchaseDigits } = ScarcityCounters();
 
   return (
-    <div className="p-1">
+    <div className="p-1 max-w-[200px] mx-auto">
       <div className="flex items-center justify-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-gray-700">People purchased:</span>
@@ -363,32 +363,41 @@ const PaymentPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex flex-col items-center justify-center p-3 sm:p-4 gap-4">
       {/* Savings Info Section */}
-      <Card className="w-full max-w-md mx-auto bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-100 shadow-lg overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-100 rounded-full blur-3xl -mr-12 -mt-12 opacity-50"></div>
-        <CardContent className="p-5 space-y-4 relative z-10">
-          <h2 className="text-xl font-extrabold text-center text-emerald-800 flex items-center justify-center gap-2 font-display tracking-tight">
-            <span className="text-2xl filter drop-shadow-sm">💰</span> How much this ebook saves you?
+      <Card className="w-full max-w-md mx-auto border-0 shadow-xl bg-white overflow-hidden ring-1 ring-slate-900/5 group">
+        {/* Professional Header */}
+        <div className="bg-slate-50 border-b border-slate-100 py-4 px-2">
+          <h2 className="text-lg md:text-xl font-bold text-center text-slate-800 flex items-center justify-center gap-2 whitespace-nowrap">
+            <span className="text-xl filter grayscale group-hover:grayscale-0 transition-all duration-500">💰</span> How much this ebook saves you?
           </h2>
-          <ul className="space-y-3 font-medium">
-            <li className="flex items-start gap-3 bg-white/60 p-2.5 rounded-lg border border-emerald-100/50 shadow-sm hover:shadow-md transition-shadow">
-              <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <span className="text-slate-700 text-sm leading-relaxed">
-                You will save <span className="font-bold text-emerald-700">₹1500-2000</span> per project buying from outside.
-              </span>
-            </li>
-            <li className="flex items-start gap-3 bg-white/60 p-2.5 rounded-lg border border-emerald-100/50 shadow-sm hover:shadow-md transition-shadow">
-              <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <span className="text-slate-700 text-sm leading-relaxed">
-                You will save <span className="font-bold text-emerald-700">₹5k - 10k</span> on outside meaningless courses.
-              </span>
-            </li>
-            <li className="flex items-start gap-3 bg-emerald-100/50 p-2.5 rounded-lg border border-emerald-200 shadow-sm hover:shadow-md transition-shadow">
-              <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <span className="text-slate-800 text-sm font-semibold leading-relaxed">
-                Mainly you will save your whole career and meaning of your <span className="text-emerald-800 font-extrabold border-b-2 border-emerald-300">19 yrs of education</span>.
-              </span>
-            </li>
-          </ul>
+        </div>
+
+        <CardContent className="p-0">
+          <div className="divide-y divide-slate-100">
+            {/* Item 1 */}
+            <div className="p-3 hover:bg-emerald-50/30 transition-colors flex gap-2 items-start">
+              <span className="text-emerald-700 font-bold text-xs mt-0.5">1.</span>
+              <p className="text-slate-600 text-xs leading-relaxed">
+                You will save <span className="font-bold text-emerald-700 bg-emerald-50 px-1 rounded">₹1500-2000</span> per project buying from outside.
+              </p>
+            </div>
+
+            {/* Item 2 */}
+            <div className="p-3 hover:bg-emerald-50/30 transition-colors flex gap-2 items-start">
+              <span className="text-emerald-700 font-bold text-xs mt-0.5">2.</span>
+              <p className="text-slate-600 text-xs leading-relaxed">
+                You will save <span className="font-bold text-emerald-700 bg-emerald-50 px-1 rounded">₹5k - 10k</span> on outside meaningless courses.
+              </p>
+            </div>
+
+            {/* High Impact Item 3 */}
+            <div className="p-3 bg-gradient-to-r from-emerald-50/50 to-transparent flex gap-2 items-start relative overflow-hidden">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500"></div>
+              <span className="text-emerald-800 font-bold text-xs mt-0.5 relative z-10">3.</span>
+              <p className="text-slate-700 text-xs font-medium leading-relaxed relative z-10">
+                Mainly you will save your whole career and meaning of your <span className="text-emerald-800 font-extrabold underline decoration-emerald-300 decoration-2 underline-offset-2">19 yrs of education</span>.
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -490,15 +499,6 @@ const PaymentPage = () => {
               </div>
             </div>
           </div>
-
-          <a
-            href="https://drive.google.com/file/d/1NZBvjLi71kS7lo9O_fEB4d4-mLEORJbO/view?usp=sharing"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-center text-sky-500 font-semibold px-2 hover:text-sky-700 transition-colors underline block"
-          >
-            I need a demo before buying
-          </a>
 
           {/* Slots Left Counter - Above coupon */}
           <SlotsCounter />

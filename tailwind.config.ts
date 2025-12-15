@@ -79,6 +79,10 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "shine": {
+          "from": { transform: "translateX(-100%) skewX(-12deg)" },
+          "to": { transform: "translateX(200%) skewX(-12deg)" }
+        },
         "accordion-down": {
           from: {
             height: "0",
@@ -114,6 +118,7 @@ export default {
         "floating": "floating 3s ease-in-out infinite",
         "slide-up": "slide-up 0.6s var(--animation-smooth)",
         "fade-in": "fade-in 0.4s var(--animation-smooth)",
+        "shine": "shine 1.5s ease-in-out infinite",
       },
     },
   },

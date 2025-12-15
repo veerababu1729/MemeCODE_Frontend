@@ -182,30 +182,24 @@ const HomePage = () => {
       <section className="py-8 px-4 bg-gradient-to-br from-muted/30 to-background">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <Button
-            className="w-full max-w-md text-xl md:text-2xl py-6 md:py-8 px-12 md:px-16 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40"
+            className="w-full max-w-md text-xl md:text-2xl py-6 md:py-8 px-12 md:px-16 group relative overflow-hidden shine-button rounded-xl border border-white/20"
             onClick={() => navigate('/payment')}
           >
-            {/* Continuous sparkle background */}
-            <div className="absolute inset-0 opacity-40">
-              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping"></div>
-              <div className="absolute top-4 right-6 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-300"></div>
-              <div className="absolute bottom-3 left-8 w-1 h-1 bg-yellow-200 rounded-full animate-ping animation-delay-500"></div>
-              <div className="absolute bottom-5 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
-            </div>
-
-            {/* Shining sweep effect */}
-            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-in-out"></div>
-
-            {/* Pulsing border with glow */}
-            <div className="absolute inset-0 rounded-xl border-2 border-white/30 group-hover:border-yellow-300/60 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:shadow-[0_0_30px_rgba(255,235,59,0.5)]"></div>
+            {/* Shining effect overlay */}
+            <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
 
             {/* Button content */}
-            <div className="relative flex items-center justify-center gap-3">
-              <span className="tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(255,235,59,0.6)]">Buy Now</span>
+            <div className="relative flex items-center justify-center gap-3 z-10">
+              <span className="font-bold tracking-[0.2em] uppercase drop-shadow-md">Buy Now</span>
             </div>
+          </Button>
 
-            {/* Bottom glow */}
-            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-4/5 h-2 bg-green-400/60 blur-sm group-hover:bg-yellow-300/80 group-hover:h-3 transition-all duration-300"></div>
+          {/* Demo Button - High Contrast */}
+          <Button
+            className="mt-4 w-full max-w-md text-lg font-bold py-6 bg-white text-green-700 border-2 border-green-600 hover:bg-green-50 hover:text-green-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01]"
+            onClick={() => window.open('https://drive.google.com/file/d/1NZBvjLi71kS7lo9O_fEB4d4-mLEORJbO/view?usp=sharing', '_blank')}
+          >
+            I need a demo before buying
           </Button>
 
 
@@ -382,30 +376,16 @@ const HomePage = () => {
       <section className="py-8 px-4 bg-gradient-to-br from-muted/30 to-background">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <Button
-            className="w-full max-w-md text-xl md:text-2xl py-6 md:py-8 px-12 md:px-16 group bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-black font-bold relative overflow-hidden shadow-2xl hover:shadow-green-500/60 transform hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 rounded-xl border-2 border-green-400/40"
+            className="w-full max-w-md text-xl md:text-2xl py-6 md:py-8 px-12 md:px-16 group relative overflow-hidden shine-button rounded-xl border border-white/20"
             onClick={() => navigate('/payment')}
           >
-            {/* Continuous sparkle background */}
-            <div className="absolute inset-0 opacity-40">
-              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping"></div>
-              <div className="absolute top-4 right-6 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-300"></div>
-              <div className="absolute bottom-3 left-8 w-1 h-1 bg-yellow-200 rounded-full animate-ping animation-delay-500"></div>
-              <div className="absolute bottom-5 right-4 w-1.5 h-1.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
-            </div>
-
-            {/* Shining sweep effect */}
-            <div className="absolute inset-0 -top-2 -bottom-2 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-in-out"></div>
-
-            {/* Pulsing border with glow */}
-            <div className="absolute inset-0 rounded-xl border-2 border-white/30 group-hover:border-yellow-300/60 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:shadow-[0_0_30px_rgba(255,235,59,0.5)]"></div>
+            {/* Shining effect overlay */}
+            <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
 
             {/* Button content */}
-            <div className="relative flex items-center justify-center gap-3">
-              <span className="tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_12px_rgba(255,235,59,0.6)]">Buy Now</span>
+            <div className="relative flex items-center justify-center gap-3 z-10">
+              <span className="font-bold tracking-[0.2em] uppercase drop-shadow-md">Buy Now</span>
             </div>
-
-            {/* Bottom glow */}
-            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-4/5 h-2 bg-green-400/60 blur-sm group-hover:bg-yellow-300/80 group-hover:h-3 transition-all duration-300"></div>
           </Button>
 
           {/* Login link for existing users */}
