@@ -37,7 +37,8 @@ const ScarcityCounters = () => {
       if (storedPurchases && storedSlots && lastUpdateTime) {
         const elapsed = Math.floor((Date.now() - parseInt(lastUpdateTime, 10)) / 5000); // 5-second intervals
 
-        const currentPurchases = parseInt(storedPurchases, 10) + elapsed;
+        const calculatedPurchases = parseInt(storedPurchases, 10) + elapsed;
+        const currentPurchases = Math.min(8765, calculatedPurchases);
         const currentSlots = Math.max(2, parseInt(storedSlots, 10) - elapsed);
 
         setPurchaseCount(currentPurchases);
@@ -63,6 +64,7 @@ const ScarcityCounters = () => {
     // Update every 5 seconds
     const interval = setInterval(() => {
       setPurchaseCount(prev => {
+        if (prev >= 8765) return 8765;
         const newValue = prev + 1;
         localStorage.setItem('purchaseCount', newValue.toString());
         localStorage.setItem('countersLastUpdate', Date.now().toString());
@@ -205,7 +207,7 @@ const PaymentPage = () => {
   const [validCouponCode, setValidCouponCode] = useState('');
 
   // Price calculation
-  const originalPrice = 199900; // ₹1999 in paise
+  const originalPrice = 29900; // ₹299 in paise
   const currentPrice = couponApplied ? Math.max(0, originalPrice - discountAmount) : originalPrice;
   const currentPriceDisplay = `₹${Math.round(currentPrice / 100)}`;
 
@@ -400,7 +402,7 @@ const PaymentPage = () => {
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500"></div>
               <span className="text-emerald-800 font-bold text-xs mt-0.5 relative z-10">3.</span>
               <p className="text-slate-700 text-xs font-medium leading-relaxed relative z-10">
-                Mainly you will save your whole career and meaning of your <span className="text-emerald-800 font-extrabold underline decoration-emerald-300 decoration-2 underline-offset-2">19 yrs of education</span>.
+                Mainly you will save every penny that you spent on <span className="text-emerald-800 font-extrabold underline decoration-emerald-300 decoration-2 underline-offset-2">19 yrs of education</span>.
               </p>
             </div>
           </div>
@@ -509,61 +511,12 @@ const PaymentPage = () => {
           {/* Slots Left Counter - Above coupon */}
           <SlotsCounter />
 
-          {/* Coupon Section */}
-          <div className="space-y-2">
-            {/* Applied Coupon Display */}
-            {couponApplied && (
-              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-2">
-                <div className="flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-800">{validCouponCode} applied</span>
-                  <span className="text-xs text-green-600">₹{Math.round(discountAmount / 100)} saved!</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCouponRemove}
-                  className="h-6 w-6 p-0 text-green-600 hover:text-green-800"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
-
-            {/* Coupon Input */}
-            {!couponApplied && (
-              <div className="space-y-2">
-                <div className="text-center">
-                  <div className="bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-2 mb-1 shadow-lg">
-                    <p className="text-sm font-bold text-yellow-800 animate-bounce whitespace-nowrap">
-                      🎉Apply coupon code to get discount🎉
-                    </p>
-
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                    placeholder="BTECH"
-                    className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    onKeyPress={(e) => e.key === 'Enter' && handleCouponApply()}
-                  />
-                  <Button
-                    onClick={handleCouponApply}
-                    size="sm"
-                    className="px-4 py-2 text-sm"
-                    disabled={!couponCode.trim()}
-                  >
-                    Apply
-                  </Button>
-                </div>
-                {couponError && (
-                  <div className="text-xs text-red-600 text-center">{couponError}</div>
-                )}
-              </div>
-            )}
+          {/* Coupon Section Replaced with Not 1999/- text */}
+          <div className="space-y-2 text-center py-2">
+            <p className="text-lg font-bold text-slate-500 relative inline-block">
+              <span className="relative z-10">Not ₹1999/-</span>
+              <span className="absolute left-0 top-1/2 w-full h-0.5 bg-red-500 -translate-y-1/2 animate-strike"></span>
+            </p>
           </div>
 
           {/* Error Message */}

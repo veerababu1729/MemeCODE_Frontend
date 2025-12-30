@@ -110,6 +110,11 @@ export default {
         "fade-in": {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" }
+        },
+        "strike": {
+          "0%": { width: "0" },
+          "50%": { width: "100%" },
+          "100%": { width: "100%" }
         }
       },
       animation: {
@@ -119,6 +124,7 @@ export default {
         "slide-up": "slide-up 0.6s var(--animation-smooth)",
         "fade-in": "fade-in 0.4s var(--animation-smooth)",
         "shine": "shine 1.5s ease-in-out infinite",
+        "strike": "strike 2s ease-in-out infinite",
       },
     },
   },
