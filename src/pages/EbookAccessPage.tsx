@@ -9,14 +9,14 @@ const EbookAccessPage = () => {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
-  const [showPdfViewer, setShowPdfViewer] = useState(true);
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
 
   // Get user data from URL parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const nameParam = urlParams.get('name');
     const emailParam = urlParams.get('email');
-    
+
     if (nameParam && emailParam) {
       setUserName(decodeURIComponent(nameParam));
       setUserEmail(decodeURIComponent(emailParam));
@@ -236,22 +236,22 @@ const EbookAccessPage = () => {
 
   const handleDownload = async () => {
     setIsDownloading(true);
-    
+
     try {
       // Create a link element to trigger download
       const link = document.createElement('a');
       link.href = '/ebook/memecodepdf.pdf'; // Path to your PDF file
       link.download = 'memecodepdf.pdf';
       link.target = '_blank';
-      
+
       // Append to body, click, and remove
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Optional: Track download analytics
       console.log(`Ebook downloaded by: ${userEmail}`);
-      
+
     } catch (error) {
       console.error('Download failed:', error);
       // Could add a toast notification here instead of alert
@@ -330,7 +330,7 @@ const EbookAccessPage = () => {
                 <h3 className="font-semibold text-lg mb-2">MemeCode</h3>
                 <p className="text-sm text-muted-foreground">Telugu Edition • PDF Format • 155 Pages</p>
               </div>
-              
+
               <div className="space-y-3">
                 <Button
                   onClick={handleDownload}
@@ -346,11 +346,11 @@ const EbookAccessPage = () => {
                   ) : (
                     <>
                       <Download className="w-5 h-5 mr-2" />
-                      Download Your Ebook 
+                      Download Your Ebook
                     </>
                   )}
                 </Button>
-                
+
                 <Button
                   onClick={() => setShowPdfViewer(!showPdfViewer)}
                   variant="outline"
@@ -392,7 +392,7 @@ const EbookAccessPage = () => {
                     Full Screen
                   </Button>
                 </div>
-                
+
                 {/* PDF Embed */}
                 <div className="w-full h-96 md:h-[600px] border border-gray-300 rounded-lg overflow-hidden">
                   <iframe
@@ -401,10 +401,10 @@ const EbookAccessPage = () => {
                     title="MemeCode Ebook PDF Viewer"
                   >
                     <p className="p-4 text-center">
-                      Your browser doesn't support PDF viewing. 
-                      <Button 
+                      Your browser doesn't support PDF viewing.
+                      <Button
                         onClick={handleDownload}
-                        variant="link" 
+                        variant="link"
                         className="text-blue-600 underline ml-1"
                       >
                         Download the PDF instead
@@ -412,7 +412,7 @@ const EbookAccessPage = () => {
                     </p>
                   </iframe>
                 </div>
-                
+
                 <div className="mt-4 text-center">
                   <p className="text-xs text-muted-foreground">
                     💡 Tip: Use Ctrl+F to search within the ebook, or click "Full Screen" for better reading experience
@@ -432,41 +432,32 @@ const EbookAccessPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <Users className="w-8 h-8 text-purple-600 mx-auto mb-2" />
                 <h4 className="font-semibold mb-1">Join Community</h4>
                 <p className="text-sm text-muted-foreground">Connect with fellow Telugu developers</p>
-                <Button 
-                  variant="outline" 
-                  className="mt-2" 
+                <Button
+                  variant="outline"
+                  className="mt-2"
                   size="sm"
-                  onClick={() => window.open('https://whatsapp.com/channel/0029Vathe9C7NoZz0cMZlw3C', '_blank')}
+                  onClick={() => window.open('https://t.me/eeinfofamily', '_blank')}
                 >
                   Join Now
                 </Button>
               </div>
-              
+
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <BookOpen className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <h4 className="font-semibold mb-1">Start Reading</h4>
+                <h4 className="font-semibold mb-1">Start Coding</h4>
                 <p className="text-sm text-muted-foreground">Begin with Chapter 1: Python Basics</p>
-                <Button 
+                <Button
                   onClick={() => setShowPdfViewer(true)}
-                  variant="outline" 
-                  className="mt-2" 
+                  variant="outline"
+                  className="mt-2"
                   size="sm"
                 >
                   Read Now
-                </Button>
-              </div>
-              
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <Star className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <h4 className="font-semibold mb-1">Practice Projects</h4>
-                <p className="text-sm text-muted-foreground">Access 300+ resume-worthy projects</p>
-                <Button variant="outline" className="mt-2" size="sm">
-                  Explore
                 </Button>
               </div>
             </div>
