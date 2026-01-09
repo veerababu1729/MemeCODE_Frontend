@@ -103,7 +103,7 @@ const DemoVideo = () => {
         <div className="relative rounded-xl overflow-hidden shadow-floating hover:shadow-glow transition-all duration-500 aspect-[9/16] bg-black">
           <iframe
             className="w-full h-full"
-            src="https://youtu.be/QS4V8uUE0eg?si=p_waYspBuXicW5h5"
+            src="https://youtube.com/shorts/XmwfV8TaQqY?si=RcZSlfUzW43vID2u"
             title="MemeCODE Demo Video"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
