@@ -40,8 +40,8 @@ const CelebrationAnimation = ({ isActive, duration = 8000 }: CelebrationAnimatio
 
         const newPieces: ConfettiPiece[] = [];
 
-        // Curly ribbons (large spiraling ribbons)
-        for (let i = 0; i < 12; i++) {
+        // Curly ribbons (reduced count, smaller size)
+        for (let i = 0; i < 5; i++) {
             newPieces.push({
                 id: i,
                 x: Math.random() * 100,
@@ -50,13 +50,13 @@ const CelebrationAnimation = ({ isActive, duration = 8000 }: CelebrationAnimatio
                 type: 'ribbon',
                 delay: Math.random() * 2,
                 duration: 4 + Math.random() * 2,
-                size: 0.8 + Math.random() * 0.5,
+                size: 0.4 + Math.random() * 0.3,
                 shade: goldShades[Math.floor(Math.random() * goldShades.length)],
             });
         }
 
-        // Small squares/rectangles (confetti pieces)
-        for (let i = 12; i < 60; i++) {
+        // Small squares/rectangles (confetti pieces - smaller)
+        for (let i = 5; i < 45; i++) {
             newPieces.push({
                 id: i,
                 x: Math.random() * 100,
@@ -65,13 +65,13 @@ const CelebrationAnimation = ({ isActive, duration = 8000 }: CelebrationAnimatio
                 type: 'square',
                 delay: Math.random() * 1.5,
                 duration: 3 + Math.random() * 2,
-                size: 0.5 + Math.random() * 0.5,
+                size: 0.3 + Math.random() * 0.3,
                 shade: goldShades[Math.floor(Math.random() * goldShades.length)],
             });
         }
 
-        // Curl pieces (small curls)
-        for (let i = 60; i < 80; i++) {
+        // Curl pieces (smaller curls, reduced count)
+        for (let i = 45; i < 55; i++) {
             newPieces.push({
                 id: i,
                 x: Math.random() * 100,
@@ -80,13 +80,13 @@ const CelebrationAnimation = ({ isActive, duration = 8000 }: CelebrationAnimatio
                 type: 'curl',
                 delay: Math.random() * 1.8,
                 duration: 3.5 + Math.random() * 2,
-                size: 0.6 + Math.random() * 0.4,
+                size: 0.3 + Math.random() * 0.3,
                 shade: goldShades[Math.floor(Math.random() * goldShades.length)],
             });
         }
 
-        // Strip pieces (thin strips)
-        for (let i = 80; i < 100; i++) {
+        // Strip pieces (smaller strips)
+        for (let i = 55; i < 70; i++) {
             newPieces.push({
                 id: i,
                 x: Math.random() * 100,
@@ -95,7 +95,7 @@ const CelebrationAnimation = ({ isActive, duration = 8000 }: CelebrationAnimatio
                 type: 'strip',
                 delay: Math.random() * 1.2,
                 duration: 2.5 + Math.random() * 2,
-                size: 0.6 + Math.random() * 0.5,
+                size: 0.3 + Math.random() * 0.3,
                 shade: goldShades[Math.floor(Math.random() * goldShades.length)],
             });
         }
