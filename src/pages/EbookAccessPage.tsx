@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Download, BookOpen, Star, Users, Clock, Eye, ExternalLink } from 'lucide-react';
+import CelebrationAnimation from '@/components/CelebrationAnimation';
 
 const EbookAccessPage = () => {
   const navigate = useNavigate();
@@ -275,6 +276,10 @@ const EbookAccessPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <style dangerouslySetInnerHTML={{ __html: bookStyles }} />
+
+      {/* Celebration Animation - Papers & Ribbons */}
+      <CelebrationAnimation isActive={true} duration={10000} />
+
       {/* Success Header */}
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">

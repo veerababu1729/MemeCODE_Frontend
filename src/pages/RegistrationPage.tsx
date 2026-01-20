@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { API_ENDPOINTS } from '@/config/api';
-import ConfettiAnimation from '@/components/ConfettiAnimation';
+
 
 interface FormData {
   email: string;
@@ -51,7 +51,7 @@ const RegistrationPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [userData, setUserData] = useState<{name: string, email: string} | null>(null);
+  const [userData, setUserData] = useState<{ name: string, email: string } | null>(null);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Get orderId from URL parameters
@@ -78,7 +78,7 @@ const RegistrationPage = () => {
 
   const validateForm = () => {
     const required = ['email', 'password', 'name', 'age', 'phoneNumber', 'gender', 'collegeName', 'collegeAddress', 'cgpa', 'currentStatus', 'reason'];
-    
+
     for (const field of required) {
       const value = formData[field as keyof FormData];
       if (field === 'cgpa') {
@@ -132,7 +132,7 @@ const RegistrationPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
@@ -168,7 +168,7 @@ const RegistrationPage = () => {
       });
 
       const result = await response.json();
-      
+
       if (!response.ok) {
         // Extract the specific error message from the server response
         throw new Error(result.error || 'Failed to submit details');
@@ -181,7 +181,7 @@ const RegistrationPage = () => {
           name: formData.name,
           email: formData.email
         });
-        
+
         // Redirect to ebook access page after 2 seconds
         setTimeout(() => {
           navigate(`/ebook-access?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`);
@@ -191,7 +191,7 @@ const RegistrationPage = () => {
       }
     } catch (error: any) {
       console.error('Submission error:', error);
-      
+
       // More specific error handling
       if (error.message.includes('fetch')) {
         setError('Network error. Please check if the server is running and try again.');
@@ -206,8 +206,6 @@ const RegistrationPage = () => {
   if (submitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-        {/* Confetti Animation for immediate celebration */}
-        <ConfettiAnimation isActive={true} duration={8000} />
         <Card className="w-full max-w-md text-center">
           <CardContent className="pt-6">
             <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
