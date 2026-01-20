@@ -1,17 +1,18 @@
-// API Configuration for different environments
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// API Configuration - Supabase Edge Functions Only (No Render)
+const SUPABASE_FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL;
+
+if (!SUPABASE_FUNCTION_URL) {
+  console.warn('⚠️ VITE_SUPABASE_FUNCTION_URL not set! API calls will fail.');
+}
 
 export const API_ENDPOINTS = {
-  CREATE_ORDER: `${API_BASE_URL}/api/create-order`,
-  VERIFY_PAYMENT: `${API_BASE_URL}/api/verify-payment`,
-  SUBMIT_DETAILS: `${API_BASE_URL}/api/submit-details`,
-  GET_USER_DETAILS: `${API_BASE_URL}/api/user-details`,
-  LOGIN: `${API_BASE_URL}/api/login`,
-  REGISTER: `${API_BASE_URL}/api/register`,
-  FORGOT_PASSWORD: `${API_BASE_URL}/api/forgot-password`,
-  RESET_PASSWORD: `${API_BASE_URL}/api/reset-password`,
-  HEALTH_CHECK: `${API_BASE_URL}/api/health`,
-  VALIDATE_COUPON: `${API_BASE_URL}/api/validate-coupon`,
+  CREATE_ORDER: `${SUPABASE_FUNCTION_URL}/create-payment-order`,
+  VERIFY_PAYMENT: `${SUPABASE_FUNCTION_URL}/verify-payment`,
+  SUBMIT_DETAILS: `${SUPABASE_FUNCTION_URL}/submit-details`,
+  LOGIN: `${SUPABASE_FUNCTION_URL}/login`,
+  VALIDATE_COUPON: `${SUPABASE_FUNCTION_URL}/validate-coupon`,
+  VERIFY_TOKEN: `${SUPABASE_FUNCTION_URL}/verify-token`,
+  HEALTH_CHECK: `${SUPABASE_FUNCTION_URL}/health`,
 };
 
-export default API_BASE_URL;
+export default SUPABASE_FUNCTION_URL;

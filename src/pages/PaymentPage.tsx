@@ -138,6 +138,10 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Optimization State: Tracks if Razorpay and Order are ready for instant checkout
+  const [razorpayReady, setRazorpayReady] = useState(false);
+  const [preCreatedOrder, setPreCreatedOrder] = useState<any>(null);
+
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -213,6 +217,15 @@ const PaymentPage = () => {
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
+      if (window.Razorpay) return resolve(true);
+
+      const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (existingScript) {
+        existingScript.addEventListener('load', () => resolve(true));
+        existingScript.addEventListener('error', () => resolve(false));
+        return;
+      }
+
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.onload = () => resolve(true);
@@ -220,6 +233,38 @@ const PaymentPage = () => {
       document.body.appendChild(script);
     });
   };
+
+  // LIGHTERSPEED IMPLEMENTATION: Preload resources for instant click response
+  useEffect(() => {
+    // 1. Preload Razorpay Script
+    // We start loading this immediately so it's ready when user clicks
+    loadRazorpayScript().then((loaded: any) => setRazorpayReady(!!loaded));
+
+    // 2. Pre-create Order (Optimistic Backend Call)
+    // We create the order ID silently in the background
+    const createPreOrder = async () => {
+      try {
+        const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: originalPrice,
+            couponCode: couponApplied ? validCouponCode : undefined
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("⚡ [Lighterspeed] Pre-created order ready:", data.orderId);
+          setPreCreatedOrder(data);
+        }
+      } catch (e) {
+        console.warn("Silent pre-fetch failed, will fallback to on-click fetch", e);
+      }
+    };
+
+    createPreOrder();
+  }, [couponApplied, validCouponCode]); // Re-fetch if coupon logic changes (though currently static)
 
   const handleCouponApply = async () => {
     setCouponError('');
@@ -280,29 +325,37 @@ const PaymentPage = () => {
     setError('');
 
     try {
-      // Load Razorpay script
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        throw new Error('Failed to load payment gateway');
+      // LIGHTERSPEED: Check pre-loaded resources first
+      let orderData = preCreatedOrder;
+
+      // 1. Ensure Script is Loaded (Should be ready from useEffect, but double check)
+      if (!razorpayReady) {
+        const loaded = await loadRazorpayScript();
+        if (!loaded) throw new Error('Failed to load payment gateway');
       }
 
-      // Create order with current price
-      const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: originalPrice,
-          couponCode: couponApplied ? validCouponCode : undefined
-        }),
-      });
+      // 2. Get Order Data (Use Pre-created or Fetch New if missing)
+      if (!orderData) {
+        console.log("⚠️ Pre-order not ready, fetching now...");
+        const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: originalPrice,
+            couponCode: couponApplied ? validCouponCode : undefined
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to create order');
+        if (!response.ok) {
+          throw new Error('Failed to create order');
+        }
+
+        orderData = await response.json();
+      } else {
+        console.log("🚀 [Lighterspeed] Launching with pre-created order:", orderData.orderId);
       }
-
-      const orderData = await response.json();
 
       // Configure Razorpay options
       const options = {
