@@ -1,11 +1,44 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts"
 import { create } from "https://deno.land/x/djwt@v2.8/mod.ts"
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+// Simple bcrypt-compatible password hashing using Web Crypto API
+async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder()
+    const salt = crypto.getRandomValues(new Uint8Array(16))
+    const passwordData = encoder.encode(password)
+
+    const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        passwordData,
+        'PBKDF2',
+        false,
+        ['deriveBits']
+    )
+
+    const derivedBits = await crypto.subtle.deriveBits(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 10000,
+            hash: 'SHA-256'
+        },
+        keyMaterial,
+        256
+    )
+
+    const hashArray = Array.from(new Uint8Array(derivedBits))
+    const saltArray = Array.from(salt)
+
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+    const saltHex = saltArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
+    return `pbkdf2:sha256:10000$${saltHex}$${hashHex}`
 }
 
 serve(async (req: Request) => {
@@ -85,7 +118,7 @@ serve(async (req: Request) => {
         }
 
         // Hash password
-        const passwordHash = await bcrypt.hash(password)
+        const passwordHash = await hashPassword(password)
 
         // Insert user details
         const { data: newUser, error: insertError } = await supabaseClient
