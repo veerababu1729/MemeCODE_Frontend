@@ -564,43 +564,58 @@ const PaymentPage = () => {
           {/* Slots Left Counter - Above coupon */}
           <SlotsCounter />
 
-          {/* Coupon Section Replaced with Not 1999/- text */}
-          <div className="space-y-2 text-center py-2">
-            <p className="text-lg font-bold text-slate-500 relative inline-block">
-              <span className="relative z-10">Not ₹1999/-</span>
-              <span className="absolute left-0 top-1/2 w-full h-0.5 bg-red-500 -translate-y-1/2 animate-strike"></span>
-            </p>
-          </div>
-
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm">
               {error}
             </div>
           )}
+        </CardContent>
+      </Card>
 
-          {/* Payment Button with shining effect */}
+      {/* Bottom padding to prevent content overlap with fixed bar */}
+      <div className="h-20 md:h-0"></div>
+
+      {/* Fixed Bottom Bar - Mobile First Design */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-50 md:relative md:max-w-md md:mx-auto md:mt-4 md:rounded-xl md:border md:shadow-xl">
+        <div className="flex items-center justify-between px-4 py-3 gap-3">
+          {/* Struck-through Original Price */}
+          <div className="flex-shrink-0">
+            <span className="relative inline-block text-lg font-bold text-slate-400">
+              <span className="relative z-10">₹1999</span>
+              <span className="absolute left-0 top-1/2 w-full h-0.5 bg-red-500 -translate-y-1/2"></span>
+            </span>
+          </div>
+
+          {/* 1hr Deal Badge */}
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-1.5 bg-gradient-to-r from-amber-100 to-orange-100 px-3 py-1.5 rounded-full border border-amber-300">
+              <Clock className="w-4 h-4 text-amber-600" />
+              <span className="text-sm font-bold text-amber-700 whitespace-nowrap">1hr Deal</span>
+            </div>
+          </div>
+
+          {/* Buy @ 299 Button */}
           <Button
             onClick={handlePayment}
             disabled={loading}
-            className="w-full py-3 text-base font-semibold group relative overflow-hidden shine-button"
+            className="flex-shrink-0 px-5 py-2.5 text-base font-bold group relative overflow-hidden shine-button rounded-lg"
           >
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
-                Processing...
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <span className="text-sm">Processing...</span>
               </>
             ) : (
               <>
-                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:scale-110 transition-transform" />
-                Pay {currentPriceDisplay} Now
+                <span className="relative z-10">Buy @ ₹299</span>
                 {/* Shining effect overlay */}
-                <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
               </>
             )}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
