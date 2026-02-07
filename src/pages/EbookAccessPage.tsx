@@ -428,46 +428,7 @@ const EbookAccessPage = () => {
           </Card>
         )}
 
-        {/* Additional Resources */}
-        <Card className="border-purple-200 shadow-lg">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-purple-700">Next Steps</CardTitle>
-            <CardDescription>
-              Continue your learning journey with these resources
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <Users className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                <h4 className="font-semibold mb-1">Join Community</h4>
-                <p className="text-sm text-muted-foreground">Connect with fellow Telugu developers</p>
-                <Button
-                  variant="outline"
-                  className="mt-2"
-                  size="sm"
-                  onClick={() => window.open('https://t.me/eeinfofamily', '_blank')}
-                >
-                  Join Now
-                </Button>
-              </div>
 
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <BookOpen className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <h4 className="font-semibold mb-1">Start Coding</h4>
-                <p className="text-sm text-muted-foreground">Begin with Chapter 1: Python Basics</p>
-                <Button
-                  onClick={() => setShowPdfViewer(true)}
-                  variant="outline"
-                  className="mt-2"
-                  size="sm"
-                >
-                  Read Now
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* User Info */}
         <div className="text-center mt-8 p-4 bg-white/50 rounded-lg">
