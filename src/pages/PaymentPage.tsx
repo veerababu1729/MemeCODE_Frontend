@@ -577,21 +577,33 @@ const PaymentPage = () => {
       <div className="h-20 md:h-0"></div>
 
       {/* Fixed Bottom Bar - Mobile First Design */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-50 md:relative md:max-w-md md:mx-auto md:mt-4 md:rounded-xl md:border md:shadow-xl">
-        <div className="flex items-center justify-between px-4 py-3 gap-3">
-          {/* Struck-through Original Price */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50 md:relative md:max-w-md md:mx-auto md:mt-4 md:rounded-xl md:border md:shadow-xl">
+        <div className="flex items-center justify-between px-3 py-3 gap-2">
+          {/* Struck-through Original Price - White Box Style */}
           <div className="flex-shrink-0">
-            <span className="relative inline-block text-lg font-bold text-slate-400">
-              <span className="relative z-10">₹1999</span>
-              <span className="absolute left-0 top-1/2 w-full h-0.5 bg-red-500 -translate-y-1/2"></span>
-            </span>
+            <div className="relative bg-white border-2 border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+              <span className="relative inline-block text-lg font-bold text-slate-500">
+                <span className="relative z-10">₹1999</span>
+                {/* Animated Strike-through Line */}
+                <span
+                  className="absolute left-0 top-1/2 h-0.5 bg-red-500 -translate-y-1/2 animate-strike-through"
+                  style={{
+                    animation: 'strikeThrough 1.5s ease-out forwards',
+                  }}
+                ></span>
+              </span>
+            </div>
           </div>
 
-          {/* 1hr Deal Badge */}
+          {/* 1hr Deal - Yellow Professional Button */}
           <div className="flex-shrink-0">
-            <div className="flex items-center gap-1.5 bg-gradient-to-r from-amber-100 to-orange-100 px-3 py-1.5 rounded-full border border-amber-300">
-              <Clock className="w-4 h-4 text-amber-600" />
-              <span className="text-sm font-bold text-amber-700 whitespace-nowrap">1hr Deal</span>
+            <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 px-4 py-2 rounded-lg shadow-md border border-yellow-500 hover:shadow-lg transition-all duration-300 cursor-default"
+              style={{
+                boxShadow: '0 4px 14px rgba(251, 191, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
+              }}
+            >
+              <Clock className="w-4 h-4 text-black" />
+              <span className="text-sm font-extrabold text-black whitespace-nowrap tracking-wide">1hr Deal</span>
             </div>
           </div>
 
@@ -616,6 +628,18 @@ const PaymentPage = () => {
           </Button>
         </div>
       </div>
+
+      {/* Strikethrough Animation Keyframes */}
+      <style>{`
+        @keyframes strikeThrough {
+          0% {
+            width: 0%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 };
