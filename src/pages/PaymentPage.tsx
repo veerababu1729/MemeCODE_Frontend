@@ -577,7 +577,7 @@ const PaymentPage = () => {
       <div className="h-20 md:h-0"></div>
 
       {/* Fixed Bottom Bar - Mobile First Design */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50 md:relative md:max-w-md md:mx-auto md:mt-4 md:rounded-xl md:border md:shadow-xl">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50 md:relative md:max-w-md md:mx-auto md:mt-0 md:rounded-xl md:border md:shadow-xl">
         <div className="flex items-center justify-between px-3 py-3 gap-2">
           {/* Struck-through Original Price - White Box Style (same size as Buy button) */}
           <div className="flex-shrink-0">
