@@ -211,7 +211,7 @@ const PaymentPage = () => {
   const [validCouponCode, setValidCouponCode] = useState('');
 
   // Price calculation
-  const originalPrice = 29900; // ₹299 in paise
+  const originalPrice = 39900; // ₹399 in paise
   const currentPrice = couponApplied ? Math.max(0, originalPrice - discountAmount) : originalPrice;
   const currentPriceDisplay = `₹${Math.round(currentPrice / 100)}`;
 
@@ -579,39 +579,35 @@ const PaymentPage = () => {
       {/* Fixed Bottom Bar - Mobile First Design */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.15)] z-50 md:relative md:max-w-md md:mx-auto md:mt-4 md:rounded-xl md:border md:shadow-xl">
         <div className="flex items-center justify-between px-3 py-3 gap-2">
-          {/* Struck-through Original Price - White Box Style */}
+          {/* Struck-through Original Price - White Box Style (same size as Buy button) */}
           <div className="flex-shrink-0">
-            <div className="relative bg-white border-2 border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+            <div className="relative bg-white border-2 border-slate-200 rounded-lg px-5 h-10 shadow-sm min-w-[110px] flex items-center justify-center">
               <span className="relative inline-block text-lg font-bold text-slate-500">
                 <span className="relative z-10">₹1999</span>
-                {/* Animated Strike-through Line */}
+                {/* Animated Strike-through Line - Infinite Loop */}
                 <span
-                  className="absolute left-0 top-1/2 h-0.5 bg-red-500 -translate-y-1/2 animate-strike-through"
+                  className="absolute left-0 top-1/2 h-0.5 bg-red-500 -translate-y-1/2"
                   style={{
-                    animation: 'strikeThrough 1.5s ease-out forwards',
+                    animation: 'strikeThrough 2s ease-in-out infinite',
                   }}
                 ></span>
               </span>
             </div>
           </div>
 
-          {/* 1hr Deal - Yellow Professional Button */}
-          <div className="flex-shrink-0">
-            <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 px-4 py-2 rounded-lg shadow-md border border-yellow-500 hover:shadow-lg transition-all duration-300 cursor-default"
-              style={{
-                boxShadow: '0 4px 14px rgba(251, 191, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
-              }}
-            >
-              <Clock className="w-4 h-4 text-black" />
-              <span className="text-sm font-extrabold text-black whitespace-nowrap tracking-wide">1hr Deal</span>
+          {/* 1hr Deal - Subtle Urgency Indicator (supports CTA, doesn't compete) */}
+          <div className="flex-shrink-0 opacity-50">
+            <div className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <span className="text-xs font-medium text-slate-500 whitespace-nowrap">1hr Deal</span>
             </div>
           </div>
 
-          {/* Buy @ 299 Button */}
+          {/* Buy @ 399 Button */}
           <Button
             onClick={handlePayment}
             disabled={loading}
-            className="flex-shrink-0 px-5 py-2.5 text-base font-bold group relative overflow-hidden shine-button rounded-lg"
+            className="flex-shrink-0 px-5 py-2.5 text-base font-bold group relative overflow-hidden shine-button rounded-lg min-w-[110px]"
           >
             {loading ? (
               <>
@@ -620,7 +616,7 @@ const PaymentPage = () => {
               </>
             ) : (
               <>
-                <span className="relative z-10">Buy @ ₹299</span>
+                <span className="relative z-10">Buy @ ₹399</span>
                 {/* Shining effect overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
               </>
@@ -629,14 +625,24 @@ const PaymentPage = () => {
         </div>
       </div>
 
-      {/* Strikethrough Animation Keyframes */}
+      {/* Strikethrough Animation Keyframes - Infinite Loop */}
       <style>{`
         @keyframes strikeThrough {
           0% {
             width: 0%;
+            left: 0;
+          }
+          50% {
+            width: 100%;
+            left: 0;
+          }
+          51% {
+            width: 100%;
+            left: 0;
           }
           100% {
-            width: 100%;
+            width: 0%;
+            left: 100%;
           }
         }
       `}</style>
