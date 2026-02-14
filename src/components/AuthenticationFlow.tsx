@@ -133,7 +133,7 @@ const AuthenticationFlow = ({ onComplete }: AuthenticationFlowProps) => {
                   onClick={() => setCurrentView('register')}
                   className="w-full bg-green-600 hover:bg-green-700 text-white"
                 >
-                  Complete Purchase - ₹399
+                  Complete Purchase - ₹199
                 </Button>
                 <Button
                   onClick={handleSwitchToLogin}

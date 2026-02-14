@@ -211,7 +211,7 @@ const PaymentPage = () => {
   const [validCouponCode, setValidCouponCode] = useState('');
 
   // Price calculation
-  const originalPrice = 39900; // ₹399 in paise
+  const originalPrice = 19900; // ₹199 in paise
   const currentPrice = couponApplied ? Math.max(0, originalPrice - discountAmount) : originalPrice;
   const currentPriceDisplay = `₹${Math.round(currentPrice / 100)}`;
 
@@ -603,7 +603,7 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          {/* Buy @ 399 Button */}
+          {/* Buy @ 199 Button */}
           <Button
             onClick={handlePayment}
             disabled={loading}
@@ -616,7 +616,7 @@ const PaymentPage = () => {
               </>
             ) : (
               <>
-                <span className="relative z-10">Buy @ ₹399</span>
+                <span className="relative z-10">Buy @ ₹199</span>
                 {/* Shining effect overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
               </>

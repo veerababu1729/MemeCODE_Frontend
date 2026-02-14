@@ -67,7 +67,7 @@ const PaymentSection = () => {
           <div className="text-center mb-6">
             <div className="flex items-center justify-center gap-4 mb-3">
               <span className="text-2xl text-muted-foreground line-through">₹1,999</span>
-              <span className="text-5xl md:text-6xl font-bold gradient-text">₹399</span>
+              <span className="text-5xl md:text-6xl font-bold gradient-text">₹199</span>
             </div>
             <p className="text-sm text-muted-foreground">One payment • Lifetime access</p>
           </div>

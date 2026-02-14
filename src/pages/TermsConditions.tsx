@@ -27,7 +27,7 @@ const TermsConditions = () => {
 
           <div>
             <h3 className="font-medium text-foreground mb-2">Payment</h3>
-            <p>One-time payment of ₹399. Lifetime access to purchased content.</p>
+            <p>One-time payment of ₹199. Lifetime access to purchased content.</p>
           </div>
 
           <div>
