@@ -194,8 +194,16 @@ serve(async (req: Request) => {
         )
 
     } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        console.error('Error:', errorMessage)
+        let errorMessage = 'Unknown error';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else if (error && typeof error === 'object' && 'message' in error) {
+            errorMessage = String((error as any).message);
+        } else {
+            errorMessage = JSON.stringify(error);
+        }
+        
+        console.error('Error:', error);
         return new Response(
             JSON.stringify({ error: `Submission failed: ${errorMessage}` }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
