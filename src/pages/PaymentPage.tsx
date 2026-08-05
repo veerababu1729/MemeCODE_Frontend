@@ -211,7 +211,7 @@ const PaymentPage = () => {
   const [validCouponCode, setValidCouponCode] = useState('');
 
   // Price calculation
-  const originalPrice = 19900; // ₹199 in paise
+  const originalPrice = 1900; // ₹19 in paise
   const currentPrice = couponApplied ? Math.max(0, originalPrice - discountAmount) : originalPrice;
   const currentPriceDisplay = `₹${Math.round(currentPrice / 100)}`;
 
