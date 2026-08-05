@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MemeCODE · Supabase Edge API Tester</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#070b12;--surface:#0e1422;--surface2:#141b2d;--surface3:#1a2238;
+      --border:#1e2b45;--accent:#6366f1;--accent2:#8b5cf6;--cyan:#06b6d4;
+      --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
+      --text:#e2e8f0;--muted:#64748b;--muted2:#475569;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow:hidden}
+
+    /* HEADER */
+    header{
+      background:linear-gradient(135deg,#0c1220 0%,#130a28 100%);
+      border-bottom:1px solid var(--border);
+      padding:0 28px;height:60px;
+      display:flex;align-items:center;justify-content:space-between;
+      position:relative;z-index:50;
+    }
+    .logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700}
+    .logo-pill{
+      background:linear-gradient(135deg,var(--accent),var(--cyan));
+      padding:5px 12px;border-radius:8px;color:#fff;font-size:12px;font-weight:700;letter-spacing:.5px
+    }
+    .logo-sub{color:var(--muted);font-size:13px;font-weight:400}
+    .hdr-right{display:flex;align-items:center;gap:10px}
+    .conn-badge{
+      display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;
+      font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surface2);
+    }
+    .dot-live{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+    .dot-live.ok{background:var(--green);animation:blink 2s infinite}
+    .dot-live.err{background:var(--red)}
+    @keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+    .btn-run-all{
+      padding:7px 16px;background:linear-gradient(135deg,var(--green),#15803d);
+      border:none;border-radius:8px;color:#fff;font-weight:600;font-size:12px;
+      cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;
+    }
+    .btn-run-all:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(34,197,94,.3)}
+
+    /* SETUP BAR */
+    #setup-bar{
+      background:linear-gradient(90deg,rgba(99,102,241,.08),rgba(6,182,212,.06));
+      border-bottom:1px solid rgba(99,102,241,.25);
+      padding:10px 28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .setup-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+    .setup-input{
+      flex:1;min-width:260px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+      border-radius:7px;padding:7px 12px;color:var(--text);
+      font-family:'JetBrains Mono',monospace;font-size:12px;
+    }
+    .setup-input:focus{outline:none;border-color:var(--accent)}
+    .setup-key-input{
+      width:300px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+      border-radius:7px;padding:7px 12px;color:var(--text);
+      font-family:'JetBrains Mono',monospace;font-size:12px;
+    }
+    .setup-key-input:focus{outline:none;border-color:var(--cyan)}
+    .btn-connect{
+      padding:7px 16px;background:var(--accent);border:none;border-radius:7px;
+      color:#fff;font-weight:600;font-size:12px;cursor:pointer;
+      font-family:'Inter',sans-serif;transition:.2s;white-space:nowrap;
+    }
+    .btn-connect:hover{background:var(--accent2)}
+
+    /* LAYOUT */
+    .layout{
+      display:grid;grid-template-columns:268px 1fr;
+      height:calc(100vh - 110px);
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      background:var(--surface);border-right:1px solid var(--border);
+      overflow-y:auto;padding:12px 10px;
+    }
+    .sidebar::-webkit-scrollbar{width:3px}
+    .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    .sec-hdr{
+      font-size:9.5px;font-weight:700;text-transform:uppercase;
+      letter-spacing:1.5px;color:var(--muted2);padding:10px 8px 4px;
+    }
+    .ep-btn{
+      width:100%;display:flex;align-items:center;gap:8px;
+      padding:9px 10px;border-radius:7px;border:none;cursor:pointer;
+      background:transparent;color:var(--text);font-size:12.5px;
+      font-family:'Inter',sans-serif;font-weight:500;text-align:left;
+      transition:.15s;margin-bottom:2px;
+    }
+    .ep-btn:hover{background:var(--surface2)}
+    .ep-btn.active{background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.3);}
+    .m-badge{font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;min-width:34px;text-align:center;flex-shrink:0}
+    .m-get{background:rgba(34,197,94,.12);color:var(--green)}
+    .m-post{background:rgba(99,102,241,.12);color:#818cf8}
+    .ep-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0}
+    .ep-dot.ok{background:var(--green)}
+    .ep-dot.warn{background:var(--yellow)}
+    .ep-dot.err{background:var(--red)}
+    .sidebar-divider{height:1px;background:var(--border);margin:10px 0}
+
+    /* MAIN */
+    .main{display:flex;flex-direction:column;overflow:hidden;min-height:0}
+
+    /* TABS */
+    .tabs{
+      display:flex;gap:2px;padding:12px 24px 0;
+      border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;
+    }
+    .tab{
+      padding:7px 14px;border-radius:7px 7px 0 0;border:none;cursor:pointer;
+      font-size:12px;font-weight:600;font-family:'Inter',sans-serif;
+      background:transparent;color:var(--muted);transition:.15s;
+    }
+    .tab.active{background:var(--surface2);color:var(--text);border-bottom:2px solid var(--accent)}
+    .tab:hover:not(.active){color:var(--text)}
+
+    /* REQUEST PANEL */
+    .req-panel{padding:16px 24px;overflow-y:auto;flex:1;min-height:0}
+    .req-panel::-webkit-scrollbar{width:4px}
+    .req-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+    .url-bar{
+      display:flex;align-items:center;gap:10px;background:var(--surface2);
+      border:1px solid var(--border);border-radius:10px;padding:9px 14px;margin-bottom:14px;
+    }
+    .url-method{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#818cf8}
+    .url-text{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .btn-send{
+      padding:9px 22px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+      border:none;border-radius:8px;color:#fff;font-weight:700;font-size:12px;
+      cursor:pointer;transition:.2s;display:flex;align-items:center;gap:7px;
+      font-family:'Inter',sans-serif;white-space:nowrap;flex-shrink:0;
+    }
+    .btn-send:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(99,102,241,.4)}
+    .btn-send:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+    .info-block{
+      background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);
+      border-radius:9px;padding:11px 14px;margin-bottom:14px;
+    }
+    .info-block p{font-size:12px;color:#a5b4fc;line-height:1.65}
+    .db-chip{
+      display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+      background:rgba(34,197,94,.1);color:var(--green);
+      border:1px solid rgba(34,197,94,.25);border-radius:4px;padding:2px 7px;margin-top:6px;
+    }
+    .no-db-chip{
+      display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+      background:rgba(99,102,241,.1);color:#818cf8;
+      border:1px solid rgba(99,102,241,.2);border-radius:4px;padding:2px 7px;margin-top:6px;
+    }
+
+    .headers-block{
+      background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.2);
+      border-radius:9px;padding:11px 14px;margin-bottom:14px;
+    }
+    .headers-block h4{font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+    .header-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px}
+    .hdr-key{color:var(--muted);font-family:'JetBrains Mono',monospace;min-width:140px}
+    .hdr-val{color:var(--cyan);font-family:'JetBrains Mono',monospace;word-break:break-all}
+
+    .fields-section h3{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+    .fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field-group{display:flex;flex-direction:column;gap:5px}
+    label{font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+    label span.req{color:var(--red);margin-left:2px}
+    input,select,textarea{
+      background:var(--surface2);border:1px solid var(--border);
+      border-radius:7px;padding:8px 11px;color:var(--text);
+      font-size:12.5px;font-family:'Inter',sans-serif;transition:border-color .2s;width:100%;
+    }
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+    textarea{font-family:'JetBrains Mono',monospace;font-size:11.5px;resize:vertical;min-height:70px}
+
+    .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* RESPONSE */
+    .resp-section{
+      background:var(--surface);border-top:1px solid var(--border);
+      display:flex;flex-direction:column;max-height:44%;min-height:160px;flex-shrink:0;
+    }
+    .resp-hdr{
+      display:flex;align-items:center;gap:10px;padding:10px 24px;
+      border-bottom:1px solid var(--border);flex-shrink:0;
+    }
+    .resp-hdr h3{font-size:12px;font-weight:600;color:var(--muted)}
+    .st-pill{padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700}
+    .st-ok{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+    .st-warn{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.25)}
+    .st-err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+    .latency{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+    .btn-copy{
+      margin-left:auto;padding:3px 9px;background:var(--surface2);
+      border:1px solid var(--border);border-radius:5px;
+      color:var(--muted);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;
+    }
+    .btn-copy:hover{color:var(--text);border-color:var(--accent)}
+    .resp-body{flex:1;overflow-y:auto;padding:14px 24px}
+    .resp-body::-webkit-scrollbar{width:3px}
+    .resp-body::-webkit-scrollbar-thumb{background:var(--border)}
+    pre{font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;white-space:pre-wrap;word-break:break-all}
+    .j-key{color:#93c5fd}.j-str{color:#86efac}.j-num{color:#fcd34d}.j-bool{color:#f9a8d4}.j-null{color:var(--muted)}
+
+    /* HISTORY */
+    .h-entry{
+      display:flex;align-items:center;gap:10px;padding:10px 14px;
+      background:var(--surface2);border:1px solid var(--border);
+      border-radius:8px;margin-bottom:7px;font-size:12px;cursor:pointer;transition:.15s;
+    }
+    .h-entry:hover{border-color:var(--accent)}
+    .h-name{font-weight:600;flex:1}
+    .h-time{font-size:10.5px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+    .h-clear{
+      padding:6px 12px;background:var(--surface2);border:1px solid var(--border);
+      border-radius:6px;color:var(--muted);font-size:11px;cursor:pointer;
+      font-family:'Inter',sans-serif;margin-bottom:12px;transition:.15s;
+    }
+    .h-clear:hover{color:var(--red);border-color:var(--red)}
+
+    /* ALL TESTS */
+    .summary-strip{
+      display:flex;align-items:center;gap:14px;padding:10px 24px;
+      background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;font-size:12px;
+    }
+    .s-stat{display:flex;align-items:center;gap:5px}
+    .sdot{width:7px;height:7px;border-radius:50%}
+    .tests-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+      gap:10px;padding:16px 24px;overflow-y:auto;
+    }
+    .tests-grid::-webkit-scrollbar{width:4px}
+    .tests-grid::-webkit-scrollbar-thumb{background:var(--border)}
+    .tc{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:7px}
+    .tc.running{border-color:rgba(99,102,241,.4);background:rgba(99,102,241,.04)}
+    .tc.pass{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.04)}
+    .tc.fail{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.04)}
+    .tc.warn{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.04)}
+    .tc-hdr{display:flex;align-items:center;gap:7px}
+    .tc-name{font-weight:600;font-size:12.5px;flex:1}
+    .tc-ico{font-size:16px;flex-shrink:0}
+    .tc-detail{font-size:11px;color:var(--muted);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+    .prog-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:3px;transition:width .4s}
+
+    .empty{text-align:center;padding:32px 20px;color:var(--muted)}
+    .empty .emi{font-size:36px;margin-bottom:10px}
+    .empty p{font-size:12.5px;line-height:1.7}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-pill">&#9889; EDGE</div>
+    MemeCODE
+    <span class="logo-sub">&nbsp;&#183; Supabase Function Tester</span>
+  </div>
+  <div class="hdr-right">
+    <div class="conn-badge">
+      <div class="dot-live" id="live-dot"></div>
+      <span id="live-text">Not connected</span>
+    </div>
+    <button class="btn-run-all" onclick="runAll()">&#9654; Run All</button>
+  </div>
+</header>
+
+<!-- SETUP BAR -->
+<div id="setup-bar">
+  <span class="setup-label">Project URL</span>
+  <input class="setup-input" id="url-in"
+    placeholder="https://xxxxxxxxxxx.supabase.co/functions/v1"
+    oninput="persist()" />
+  <span class="setup-label">Anon Key</span>
+  <input class="setup-key-input" id="key-in" type="password"
+    placeholder="eyJhbGciOiJIUzI1NiIs..."
+    oninput="persist()" />
+  <button class="btn-connect" onclick="healthCheck()">Connect &#10003;</button>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sec-hdr">&#9881; System</div>
+    <button class="ep-btn active" id="btn-health" onclick="sel('health')">
+      <span class="m-badge m-get">GET</span> Health Check
+      <span class="ep-dot" id="dot-health"></span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+    <div class="sec-hdr">&#128179; Payments</div>
+    <button class="ep-btn" id="btn-create-order" onclick="sel('create-order')">
+      <span class="m-badge m-post">POST</span> Create Order
+      <span class="ep-dot" id="dot-create-order"></span>
+    </button>
+    <button class="ep-btn" id="btn-validate-coupon" onclick="sel('validate-coupon')">
+      <span class="m-badge m-post">POST</span> Validate Coupon
+      <span class="ep-dot" id="dot-validate-coupon"></span>
+    </button>
+    <button class="ep-btn" id="btn-verify-payment" onclick="sel('verify-payment')">
+      <span class="m-badge m-post">POST</span> Verify Payment
+      <span class="ep-dot" id="dot-verify-payment"></span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+    <div class="sec-hdr">&#128100; Auth / Users</div>
+    <button class="ep-btn" id="btn-submit-details" onclick="sel('submit-details')">
+      <span class="m-badge m-post">POST</span> Submit Details
+      <span class="ep-dot" id="dot-submit-details"></span>
+    </button>
+    <button class="ep-btn" id="btn-login" onclick="sel('login')">
+      <span class="m-badge m-post">POST</span> Login
+      <span class="ep-dot" id="dot-login"></span>
+    </button>
+    <button class="ep-btn" id="btn-verify-token" onclick="sel('verify-token')">
+      <span class="m-badge m-post">POST</span> Verify Token
+      <span class="ep-dot" id="dot-verify-token"></span>
+    </button>
+    <button class="ep-btn" id="btn-forgot-password" onclick="sel('forgot-password')">
+      <span class="m-badge m-post">POST</span> Forgot Password
+      <span class="ep-dot" id="dot-forgot-password"></span>
+    </button>
+    <button class="ep-btn" id="btn-reset-password" onclick="sel('reset-password')">
+      <span class="m-badge m-post">POST</span> Reset Password
+      <span class="ep-dot" id="dot-reset-password"></span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+    <button class="ep-btn" onclick="showAllTests()" style="color:var(--green)">
+      <span style="font-size:14px">&#128194;</span> All Endpoints Overview
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" id="t-req" onclick="switchTab('req')">Request</button>
+      <button class="tab" id="t-hist" onclick="switchTab('hist')">History <span id="hcnt" style="font-size:10px;opacity:.55"></span></button>
+    </div>
+
+    <!-- REQUEST TAB -->
+    <div id="req-panel" class="req-panel">
+      <div class="url-bar">
+        <span class="url-method" id="u-method">GET</span>
+        <span class="url-text" id="u-url">&#8212;</span>
+        <button class="btn-send" id="send-btn" onclick="send()">
+          <span id="s-lbl">Send</span>
+          <span id="s-spin" style="display:none" class="spinner"></span>
+        </button>
+      </div>
+
+      <div class="info-block" id="ep-info"><p>Select an endpoint to begin.</p></div>
+
+      <div class="headers-block">
+        <h4>Auto-injected Supabase Headers</h4>
+        <div class="header-row">
+          <span class="hdr-key">apikey</span>
+          <span class="hdr-val" id="hdr-apikey-val">&#8212; set Anon Key above &#8212;</span>
+        </div>
+        <div class="header-row">
+          <span class="hdr-key">Authorization</span>
+          <span class="hdr-val" id="hdr-auth-val">Bearer &#8212; set Anon Key above &#8212;</span>
+        </div>
+        <div class="header-row">
+          <span class="hdr-key">Content-Type</span>
+          <span class="hdr-val" style="color:var(--muted)">application/json</span>
+        </div>
+      </div>
+
+      <div class="fields-section">
+        <h3>Request Body</h3>
+        <div id="fields-wrap"></div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div id="hist-panel" style="display:none;padding:16px 24px;overflow-y:auto;flex:1;min-height:0">
+      <button class="h-clear" onclick="clearHist()">&#128465; Clear History</button>
+      <div id="hist-list"></div>
+      <div class="empty" id="hist-empty">
+        <div class="emi">&#128203;</div>
+        <p>No requests yet.<br/>Send some requests and they will appear here.</p>
+      </div>
+    </div>
+
+    <!-- ALL TESTS PANEL -->
+    <div id="all-tests-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+      <div class="summary-strip">
+        <span class="s-stat"><span class="sdot" style="background:var(--muted)"></span> Total: <b id="s-total">0</b></span>
+        <span class="s-stat"><span class="sdot" style="background:var(--green)"></span> Pass: <b id="s-pass">0</b></span>
+        <span class="s-stat"><span class="sdot" style="background:var(--yellow)"></span> Reachable: <b id="s-warn">0</b></span>
+        <span class="s-stat"><span class="sdot" style="background:var(--red)"></span> Fail: <b id="s-fail">0</b></span>
+        <span id="s-prog" style="margin-left:auto;font-size:11px;color:var(--muted)"></span>
+      </div>
+      <div class="tests-grid" id="tests-grid"></div>
+    </div>
+
+    <!-- RESPONSE SECTION -->
+    <div class="resp-section">
+      <div class="resp-hdr">
+        <h3>Response</h3>
+        <span class="st-pill" id="r-pill" style="display:none"></span>
+        <span class="latency" id="r-lat"></span>
+        <button class="btn-copy" id="r-copy" style="display:none" onclick="copyResp()">Copy JSON</button>
+      </div>
+      <div class="resp-body">
+        <div class="empty">
+          <div class="emi">&#128640;</div>
+          <p>Hit <b>Send</b> to fire a request.<br/>Response appears here.</p>
+        </div>
+        <pre id="r-pre" style="display:none"></pre>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var EPS = {
+  'health':{method:'GET',path:'/health',label:'Health Check',desc:'Checks that the edge runtime is alive. No database queries.',db:false,fields:[],probe:true,probeBody:null},
+  'validate-coupon':{method:'POST',path:'/validate-coupon',label:'Validate Coupon',desc:'SELECTs from the <b>coupons</b> table to verify the code is active and returns discount info.',db:true,dbInfo:'coupons (SELECT)',fields:[{id:'code',label:'Coupon Code',ph:'SAVE20',req:true}],probe:true,probeBody:{code:'PROBE_TEST'}},
+  'create-order':{method:'POST',path:'/create-payment-order',label:'Create Order',desc:'SELECTs <b>coupons</b> (optional), calls Razorpay API to create an order, then INSERTs a record into <b>payments</b> table.',db:true,dbInfo:'payments (INSERT), coupons (SELECT)',fields:[{id:'amount',label:'Amount in paise',ph:'9900',req:true},{id:'currency',label:'Currency',ph:'INR',req:false},{id:'couponCode',label:'Coupon Code',ph:'SAVE20 (optional)',req:false},{id:'paymentType',label:'Payment Type',ph:'full',req:false}],probe:false},
+  'verify-payment':{method:'POST',path:'/verify-payment',label:'Verify Payment',desc:'Verifies Razorpay HMAC signature using RAZORPAY_KEY_SECRET, then UPDATEs <b>payments</b> row status to completed.',db:true,dbInfo:'payments (UPDATE)',fields:[{id:'razorpay_order_id',label:'Razorpay Order ID',ph:'order_xxx',req:true},{id:'razorpay_payment_id',label:'Razorpay Payment ID',ph:'pay_xxx',req:true},{id:'razorpay_signature',label:'Razorpay Signature',ph:'hmac_signature_string',req:true}],probe:true,probeBody:{razorpay_order_id:'x',razorpay_payment_id:'x',razorpay_signature:'x'}},
+  'submit-details':{method:'POST',path:'/submit-details',label:'Submit Details',desc:'SELECTs <b>user_details</b> (duplicate check) + <b>payments</b> (order verify), hashes password via PBKDF2, INSERTs user record, returns signed 7-day JWT.',db:true,dbInfo:'user_details (INSERT+SELECT), payments (SELECT)',fields:[{id:'orderId',label:'Order ID',ph:'order_xxx',req:true},{id:'email',label:'Email',ph:'student@college.edu',req:true},{id:'password',label:'Password',ph:'secret123',req:true},{id:'name',label:'Full Name',ph:'Ravi Kumar',req:true},{id:'age',label:'Age',ph:'21',req:true},{id:'phoneNumber',label:'Phone',ph:'9876543210',req:true},{id:'gender',label:'Gender',ph:'Male',req:true},{id:'collegeName',label:'College Name',ph:'ABC Engineering College',req:true},{id:'collegeAddress',label:'College Address',ph:'Hyderabad, Telangana',req:true},{id:'currentStatus',label:'Current Status',ph:'Student',req:true},{id:'reason',label:'Reason to Join',ph:'I want to become a developer...',req:true},{id:'course',label:'Course',ph:'B.Tech CSE',req:false},{id:'yearOfStudying',label:'Year of Studying',ph:'3',req:false},{id:'yearOfPassedout',label:'Year Passed Out',ph:'2026',req:false},{id:'cgpa',label:'CGPA',ph:'8.5',req:false}],probe:true,probeBody:{}},
+  'login':{method:'POST',path:'/login',label:'Login',desc:'SELECTs <b>user_details</b> by email, verifies PBKDF2 password hash, returns a signed 7-day JWT on success.',db:true,dbInfo:'user_details (SELECT)',fields:[{id:'email',label:'Email',ph:'student@college.edu',req:true},{id:'password',label:'Password',ph:'secret123',req:true}],probe:true,probeBody:{email:'probe@test.com',password:'probepass'}},
+  'verify-token':{method:'POST',path:'/verify-token',label:'Verify Token',desc:'Verifies a JWT using JWT_SECRET env var. Returns decoded payload if valid. No DB queries.',db:false,fields:[{id:'token',label:'JWT Token',ph:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',req:true}],probe:true,probeBody:{token:'bad.token.here'}},
+  'forgot-password':{method:'POST',path:'/forgot-password',label:'Forgot Password',desc:'SELECTs <b>user_details</b> for email lookup, generates a 1-hour password-reset JWT, sends email via <b>Brevo SMTP API</b>.',db:true,dbInfo:'user_details (SELECT)',fields:[{id:'email',label:'Registered Email',ph:'student@college.edu',req:true}],probe:true,probeBody:{email:'noemail@probe.test'}},
+  'reset-password':{method:'POST',path:'/reset-password',label:'Reset Password',desc:'Verifies reset JWT (checks type=password_reset), hashes new password via PBKDF2, UPDATEs <b>user_details.password_hash</b>. Min 6 chars.',db:true,dbInfo:'user_details (UPDATE)',fields:[{id:'token',label:'Reset Token (from email)',ph:'eyJ...',req:true},{id:'newPassword',label:'New Password (min 6 chars)',ph:'newSecret123',req:true}],probe:true,probeBody:{token:'bad.token',newPassword:'probepass'}}
+};
+
+var hist = JSON.parse(localStorage.getItem('mc_hist')||'[]');
+
+function getUrl(){return (localStorage.getItem('mc_url')||'').replace(/\/$/,'');}
+function getKey(){return localStorage.getItem('mc_key')||'';}
+
+function persist(){
+  var u=document.getElementById('url-in').value.trim().replace(/\/$/,'');
+  var k=document.getElementById('key-in').value.trim();
+  localStorage.setItem('mc_url',u); localStorage.setItem('mc_key',k);
+  updateKeyDisplay();
+  var ep=EPS[cur];
+  if(ep) document.getElementById('u-url').textContent=u+ep.path;
+}
+
+function updateKeyDisplay(){
+  var k=document.getElementById('key-in').value.trim();
+  var short=k?k.substring(0,18)+'...':'— set above —';
+  document.getElementById('hdr-apikey-val').textContent=short;
+  document.getElementById('hdr-auth-val').textContent='Bearer '+short;
+}
+
+function getHeaders(){
+  var k=getKey();
+  return {'Content-Type':'application/json','apikey':k,'Authorization':'Bearer '+k};
+}
+
+var cur='health';
+
+window.onload=function(){
+  var u=getUrl(); var k=getKey();
+  if(u) document.getElementById('url-in').value=u;
+  if(k) document.getElementById('key-in').value=k;
+  updateKeyDisplay(); sel('health'); renderHist(); updateHcnt();
+};
+
+function sel(id){
+  cur=id;
+  document.querySelectorAll('.ep-btn').forEach(function(b){b.classList.remove('active');});
+  var btn=document.getElementById('btn-'+id);
+  if(btn) btn.classList.add('active');
+  var ep=EPS[id]; if(!ep) return;
+  document.getElementById('u-method').textContent=ep.method;
+  document.getElementById('u-url').textContent=getUrl()+ep.path;
+  var html='<p>'+ep.desc+'</p>';
+  if(ep.db) html+='<span class="db-chip">&#128450; DB: '+ep.dbInfo+'</span>';
+  else       html+='<span class="no-db-chip">&#8505; No DB queries</span>';
+  document.getElementById('ep-info').innerHTML=html;
+  buildFields(ep);
+  document.getElementById('req-panel').style.display='block';
+  document.getElementById('hist-panel').style.display='none';
+  document.getElementById('all-tests-panel').style.display='none';
+  document.getElementById('t-req').classList.add('active');
+  document.getElementById('t-hist').classList.remove('active');
+  clearResp();
+}
+
+function buildFields(ep){
+  var wrap=document.getElementById('fields-wrap');
+  if(!ep.fields||!ep.fields.length){
+    wrap.innerHTML='<div class="empty" style="padding:16px 0"><div class="emi">&#9889;</div><p>No body params required.<br/>Just hit <b>Send</b>!</p></div>';
+    return;
+  }
+  var grid=document.createElement('div'); grid.className='fields-grid';
+  ep.fields.forEach(function(f){
+    var g=document.createElement('div'); g.className='field-group';
+    var l=document.createElement('label'); l.htmlFor='f-'+f.id;
+    l.innerHTML=f.label+(f.req?'<span class="req">*</span>':'');
+    var inp=document.createElement('input');
+    inp.id='f-'+f.id; inp.type='text'; inp.placeholder=f.ph||'';
+    g.appendChild(l); g.appendChild(inp); grid.appendChild(g);
+  });
+  wrap.innerHTML=''; wrap.appendChild(grid);
+}
+
+function fieldVals(ep){
+  var v={};
+  (ep.fields||[]).forEach(function(f){
+    var el=document.getElementById('f-'+f.id);
+    v[f.id]=el?el.value.trim():'';
+  });
+  return v;
+}
+
+function buildBody(ep,fv){
+  switch(ep.label){
+    case 'Validate Coupon': return {code:fv.code};
+    case 'Create Order': return {amount:parseInt(fv.amount)||9900,currency:fv.currency||'INR',couponCode:fv.couponCode||undefined,paymentType:fv.paymentType||'full'};
+    case 'Verify Payment': return {razorpay_order_id:fv.razorpay_order_id,razorpay_payment_id:fv.razorpay_payment_id,razorpay_signature:fv.razorpay_signature};
+    case 'Submit Details': return {orderId:fv.orderId,email:fv.email,password:fv.password,name:fv.name,age:fv.age,phoneNumber:fv.phoneNumber,gender:fv.gender,collegeName:fv.collegeName,collegeAddress:fv.collegeAddress,currentStatus:fv.currentStatus,reason:fv.reason,course:fv.course||undefined,yearOfStudying:fv.yearOfStudying||undefined,yearOfPassedout:fv.yearOfPassedout||undefined,cgpa:fv.cgpa||undefined};
+    case 'Login': return {email:fv.email,password:fv.password};
+    case 'Verify Token': return {token:fv.token};
+    case 'Forgot Password': return {email:fv.email};
+    case 'Reset Password': return {token:fv.token,newPassword:fv.newPassword};
+    default: return null;
+  }
+}
+
+async function send(){
+  var base=getUrl();
+  if(!base){alert('Set Supabase project URL first!');return;}
+  var ep=EPS[cur]; if(!ep) return;
+  var url=base+ep.path;
+  var fv=fieldVals(ep);
+  var bodyObj=buildBody(ep,fv);
+  setLoading(true);
+  var t0=Date.now();
+  try{
+    var opts={method:ep.method,headers:getHeaders()};
+    if(bodyObj!==null&&ep.method!=='GET') opts.body=JSON.stringify(bodyObj);
+    var res=await fetch(url,opts);
+    var lat=Date.now()-t0;
+    var data=await res.json().catch(function(){return {};});
+    showResp(res.status,data,lat);
+    setDot(cur,res.status);
+    pushHist(ep.label,ep.method,url,res.status,lat,data);
+  }catch(e){
+    var lat2=Date.now()-t0;
+    showResp(0,{error:e.message,hint:'Network error — check URL, CORS, and anon key.'},lat2);
+    setDot(cur,0);
+    pushHist(ep.label,ep.method,url,0,lat2,{error:e.message});
+  }
+  setLoading(false);
+}
+
+async function healthCheck(){
+  persist();
+  var base=getUrl();
+  if(!base){alert('Enter Supabase URL!');return;}
+  var dot=document.getElementById('live-dot');
+  var txt=document.getElementById('live-text');
+  txt.textContent='Checking...'; dot.className='dot-live';
+  try{
+    var res=await fetch(base+'/health',{headers:getHeaders()});
+    dot.className='dot-live '+(res.ok?'ok':'err');
+    txt.textContent=res.ok?'Connected':'HTTP '+res.status;
+    if(res.ok){var data=await res.json().catch(function(){return{};});showResp(res.status,data,0);}
+    setDot('health',res.status);
+    document.getElementById('u-url').textContent=base+(EPS[cur]?EPS[cur].path:'');
+  }catch(e){
+    dot.className='dot-live err'; txt.textContent='Cannot reach server';
+  }
+}
+
+async function runAll(){
+  var base=getUrl();
+  if(!base){alert('Set Supabase URL first!');return;}
+  showAllTests();
+  var ids=Object.keys(EPS);
+  var grid=document.getElementById('tests-grid');
+  grid.innerHTML=ids.map(function(id){
+    var ep=EPS[id];
+    return '<div class="tc running" id="tc-'+id+'"><div class="tc-hdr"><span class="m-badge m-'+ep.method.toLowerCase()+'">'+ep.method+'</span><span class="tc-name">'+ep.label+'</span><span class="tc-ico" id="tci-'+id+'">&#9203;</span></div><div class="tc-detail" id="tcd-'+id+'">Queued...</div><div class="prog-bar"><div class="prog-fill" id="tcp-'+id+'" style="width:0%"></div></div></div>';
+  }).join('');
+  document.getElementById('s-total').textContent=ids.length;
+  var pass=0,warn=0,fail=0;
+  for(var i=0;i<ids.length;i++){
+    var id=ids[i]; var ep=EPS[id];
+    var card=document.getElementById('tc-'+id);
+    var ico=document.getElementById('tci-'+id);
+    var det=document.getElementById('tcd-'+id);
+    var prog=document.getElementById('tcp-'+id);
+    det.textContent='Sending probe...'; prog.style.width='35%';
+    try{
+      var url=base+ep.path;
+      var opts={method:ep.method,headers:getHeaders()};
+      if(ep.probe&&ep.probeBody!==null&&ep.method!=='GET') opts.body=JSON.stringify(ep.probeBody||{});
+      else if(ep.method!=='GET') opts.body=JSON.stringify({});
+      var t0=Date.now();
+      var res=await fetch(url,opts);
+      var lat=Date.now()-t0;
+      prog.style.width='100%';
+      var data=await res.json().catch(function(){return{};});
+      if(res.status>=200&&res.status<300){
+        card.className='tc pass'; ico.textContent='&#9989;';
+        det.textContent=res.status+' OK  '+lat+'ms';
+        pass++;
+      }else if(res.status>=400&&res.status<500){
+        card.className='tc warn'; ico.textContent='&#9888;';
+        var msg=data.error||JSON.stringify(data).substring(0,60);
+        det.textContent=res.status+' Validation Error  '+lat+'ms\n"'+msg+'"';
+        warn++;
+      }else{
+        card.className='tc fail'; ico.textContent='&#10060;';
+        det.textContent=res.status+' Server Error  '+lat+'ms';
+        fail++;
+      }
+      setDot(id,res.status);
+    }catch(e){
+      prog.style.width='100%'; card.className='tc fail'; ico.textContent='&#10060;';
+      det.textContent='Network Error: '+e.message; fail++;
+    }
+    document.getElementById('s-pass').textContent=pass;
+    document.getElementById('s-warn').textContent=warn;
+    document.getElementById('s-fail').textContent=fail;
+    document.getElementById('s-prog').textContent=(pass+warn+fail)+'/'+ids.length+' tested';
+    await new Promise(function(r){setTimeout(r,350);});
+  }
+  document.getElementById('s-prog').textContent='All '+ids.length+' tested';
+  var dl=document.getElementById('live-dot'); var tl=document.getElementById('live-text');
+  dl.className='dot-live '+(fail===0?'ok':'err');
+  tl.textContent=fail===0?('All '+ids.length+' reachable'):(fail+' failed');
+}
+
+function setLoading(on){
+  document.getElementById('send-btn').disabled=on;
+  document.getElementById('s-lbl').textContent=on?'Sending...':'Send';
+  document.getElementById('s-spin').style.display=on?'flex':'none';
+}
+
+function showResp(status,data,lat){
+  var pre=document.getElementById('r-pre');
+  var pill=document.getElementById('r-pill');
+  var latEl=document.getElementById('r-lat');
+  var copy=document.getElementById('r-copy');
+  pre.style.display='block'; pill.style.display='inline-flex'; copy.style.display='inline-flex';
+  var ok=status>=200&&status<300; var warn=status>=400&&status<500;
+  pill.textContent=status===0?'Network Error':(status+' '+stxt(status));
+  pill.className='st-pill '+(ok?'st-ok':warn?'st-warn':'st-err');
+  latEl.textContent=lat>0?(lat+'ms'):'';
+  pre.innerHTML=highlight(JSON.stringify(data,null,2));
+}
+
+function clearResp(){
+  document.getElementById('r-pre').style.display='none';
+  document.getElementById('r-pill').style.display='none';
+  document.getElementById('r-lat').textContent='';
+  document.getElementById('r-copy').style.display='none';
+}
+
+function copyResp(){
+  navigator.clipboard.writeText(document.getElementById('r-pre').innerText);
+  var b=document.getElementById('r-copy');
+  b.textContent='Copied!'; setTimeout(function(){b.textContent='Copy JSON';},1500);
+}
+
+function highlight(j){
+  return j.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,function(m){
+    var c='j-num';
+    if(/^"/.test(m)) c=/:$/.test(m)?'j-key':'j-str';
+    else if(/true|false/.test(m)) c='j-bool';
+    else if(/null/.test(m)) c='j-null';
+    return '<span class="'+c+'">'+m+'</span>';
+  });
+}
+
+function stxt(c){return{200:'OK',201:'Created',400:'Bad Request',401:'Unauthorized',403:'Forbidden',404:'Not Found',500:'Server Error'}[c]||'';}
+
+function setDot(id,status){
+  var el=document.getElementById('dot-'+id); if(!el) return;
+  var ok=status>=200&&status<300; var warn=status>=400&&status<500;
+  el.className='ep-dot '+(ok?'ok':warn?'warn':'err');
+}
+
+function switchTab(t){
+  document.getElementById('req-panel').style.display=t==='req'?'block':'none';
+  document.getElementById('hist-panel').style.display=t==='hist'?'flex':'none';
+  document.getElementById('all-tests-panel').style.display='none';
+  document.getElementById('t-req').classList.toggle('active',t==='req');
+  document.getElementById('t-hist').classList.toggle('active',t==='hist');
+  if(t==='hist') renderHist();
+}
+
+function showAllTests(){
+  document.querySelectorAll('.ep-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('req-panel').style.display='none';
+  document.getElementById('hist-panel').style.display='none';
+  document.getElementById('all-tests-panel').style.display='flex';
+  document.getElementById('t-req').classList.remove('active');
+  document.getElementById('t-hist').classList.remove('active');
+}
+
+function pushHist(name,method,url,status,lat,data){
+  hist.unshift({name:name,method:method,url:url,status:status,lat:lat,data:data,time:new Date().toISOString()});
+  if(hist.length>60) hist.pop();
+  localStorage.setItem('mc_hist',JSON.stringify(hist));
+  updateHcnt();
+}
+
+function renderHist(){
+  var list=document.getElementById('hist-list');
+  var empty=document.getElementById('hist-empty');
+  if(!hist.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=hist.map(function(h,i){
+    var ok=h.status>=200&&h.status<300; var warn=h.status>=400&&h.status<500;
+    var cls=ok?'st-ok':warn?'st-warn':'st-err';
+    var t=new Date(h.time).toLocaleTimeString();
+    return '<div class="h-entry" onclick="loadHist('+i+')"><span class="m-badge m-post" style="font-size:9px">'+h.method+'</span><span class="h-name">'+h.name+'</span><span class="st-pill '+cls+'" style="font-size:10px">'+(h.status||'ERR')+'</span><span class="latency">'+h.lat+'ms</span><span class="h-time">'+t+'</span></div>';
+  }).join('');
+}
+
+function loadHist(i){var h=hist[i];showResp(h.status,h.data,h.lat);switchTab('req');}
+
+function clearHist(){hist=[];localStorage.removeItem('mc_hist');renderHist();updateHcnt();}
+
+function updateHcnt(){
+  document.getElementById('hcnt').textContent=hist.length?('('+hist.length+')'):'';
+}
+</script>
+</body>
+</html>
