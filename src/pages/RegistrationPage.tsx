@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
-import { API_ENDPOINTS } from '@/config/api';
+import { API_ENDPOINTS, getSupabaseHeaders } from '@/config/api';
 
 
 interface FormData {
@@ -145,9 +145,7 @@ const RegistrationPage = () => {
     try {
       const response = await fetch(API_ENDPOINTS.SUBMIT_DETAILS, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getSupabaseHeaders(),
         body: JSON.stringify({
           orderId,
           email: formData.email,

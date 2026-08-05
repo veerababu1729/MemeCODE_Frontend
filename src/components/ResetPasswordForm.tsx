@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
-import { API_ENDPOINTS } from '@/config/api';
+import { API_ENDPOINTS, getSupabaseHeaders } from '@/config/api';
 
 const ResetPasswordForm = () => {
   const [searchParams] = useSearchParams();
@@ -84,9 +84,7 @@ const ResetPasswordForm = () => {
     try {
       const response = await fetch(API_ENDPOINTS.RESET_PASSWORD, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getSupabaseHeaders(),
         body: JSON.stringify({
           token: token,
           newPassword: passwords.newPassword,

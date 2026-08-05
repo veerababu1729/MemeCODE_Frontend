@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
-import { API_ENDPOINTS } from '@/config/api';
+import { API_ENDPOINTS, getSupabaseHeaders } from '@/config/api';
 
 interface LoginFormProps {
   onLoginSuccess: (userData: any) => void;
@@ -67,9 +67,7 @@ const LoginForm = ({ onLoginSuccess, onSwitchToRegister }: LoginFormProps) => {
     try {
       const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getSupabaseHeaders(),
         body: JSON.stringify({
           email: loginData.email,
           password: loginData.password,
@@ -119,9 +117,7 @@ const LoginForm = ({ onLoginSuccess, onSwitchToRegister }: LoginFormProps) => {
     try {
       const response = await fetch(API_ENDPOINTS.FORGOT_PASSWORD, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getSupabaseHeaders(),
         body: JSON.stringify({
           email: forgotPasswordEmail,
         }),

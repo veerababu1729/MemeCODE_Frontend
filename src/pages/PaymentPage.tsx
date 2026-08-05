@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CreditCard, Shield, CheckCircle, Clock, Tag, X, Check } from 'lucide-react';
-import { API_ENDPOINTS } from '@/config/api';
+import { API_ENDPOINTS, getSupabaseHeaders } from '@/config/api';
 import ebookCover from '@/assets/coverpage.png';
 
 declare global {
@@ -246,7 +246,7 @@ const PaymentPage = () => {
       try {
         const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getSupabaseHeaders(),
           body: JSON.stringify({
             amount: originalPrice,
             couponCode: couponApplied ? validCouponCode : undefined
@@ -275,7 +275,7 @@ const PaymentPage = () => {
     try {
       const response = await fetch(API_ENDPOINTS.VALIDATE_COUPON, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getSupabaseHeaders(),
         body: JSON.stringify({ code: couponCode }),
       });
 
@@ -339,9 +339,7 @@ const PaymentPage = () => {
         console.log("⚠️ Pre-order not ready, fetching now...");
         const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: getSupabaseHeaders(),
           body: JSON.stringify({
             amount: originalPrice,
             couponCode: couponApplied ? validCouponCode : undefined
@@ -370,9 +368,7 @@ const PaymentPage = () => {
             // Verify payment
             const verifyResponse = await fetch(API_ENDPOINTS.VERIFY_PAYMENT, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: getSupabaseHeaders(),
               body: JSON.stringify({
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

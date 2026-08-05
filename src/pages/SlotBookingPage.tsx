@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CreditCard, CheckCircle, Sparkles, Tag, ArrowRight } from 'lucide-react';
-import { API_ENDPOINTS } from '@/config/api';
+import { API_ENDPOINTS, getSupabaseHeaders } from '@/config/api';
 
 declare global {
     interface Window {
@@ -51,9 +51,7 @@ const SlotBookingPage = () => {
             // Create order with slot booking type
             const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: getSupabaseHeaders(),
                 body: JSON.stringify({
                     amount: slotPrice,
                     paymentType: 'slot' // Mark as slot booking
@@ -79,9 +77,7 @@ const SlotBookingPage = () => {
                         // Verify payment
                         const verifyResponse = await fetch(API_ENDPOINTS.VERIFY_PAYMENT, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
+                            headers: getSupabaseHeaders(),
                             body: JSON.stringify({
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_payment_id: response.razorpay_payment_id,
