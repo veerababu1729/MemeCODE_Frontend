@@ -55,7 +55,7 @@ const PaymentSection = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
               BTECH Special Price:
             </h2>
-            <p className="text-sm text-muted-foreground">After timer ends, price = ₹1,999/-</p>
+            <p className="text-sm text-muted-foreground">After timer ends, price = ₹2,999/-</p>
           </div>
 
           {/* Countdown Timer inside the card */}

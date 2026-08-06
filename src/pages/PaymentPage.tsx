@@ -211,7 +211,7 @@ const PaymentPage = () => {
   const [validCouponCode, setValidCouponCode] = useState('');
 
   // Price calculation
-  const originalPrice = 1900; // ₹19 in paise
+  const originalPrice = 99900; // ₹999 in paise
   const currentPrice = couponApplied ? Math.max(0, originalPrice - discountAmount) : originalPrice;
   const currentPriceDisplay = `₹${Math.round(currentPrice / 100)}`;
 
@@ -579,7 +579,7 @@ const PaymentPage = () => {
           <div className="flex-shrink-0">
             <div className="relative bg-white border-2 border-slate-200 rounded-lg px-5 h-10 shadow-sm min-w-[110px] flex items-center justify-center">
               <span className="relative inline-block text-lg font-bold text-slate-500">
-                <span className="relative z-10">₹1999</span>
+                <span className="relative z-10">₹2999</span>
                 {/* Animated Strike-through Line - Infinite Loop */}
                 <span
                   className="absolute left-0 top-1/2 h-0.5 bg-red-500 -translate-y-1/2"
@@ -612,7 +612,7 @@ const PaymentPage = () => {
               </>
             ) : (
               <>
-                <span className="relative z-10">Buy @ ₹199</span>
+                <span className="relative z-10">Buy @ ₹999</span>
                 {/* Shining effect overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out shine-overlay"></div>
               </>

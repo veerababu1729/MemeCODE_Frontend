@@ -32,7 +32,7 @@ const RefundPolicy = () => {
             <ul className="space-y-1">
               <li>• Instant access to complete content</li>
               <li>• Digital product cannot be "returned"</li>
-              <li>• Affordable pricing at ₹199 only</li>
+              <li>• Affordable pricing at ₹999 only</li>
             </ul>
           </div>
 
